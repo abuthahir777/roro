@@ -27,10 +27,7 @@ class Excel_model extends CI_Model
         {
             return $this->countryGet($countryCode);
         }
-        else
-        {
-            return false;
-        }
+
     }
 
     function countryGet($countryCode)

@@ -13,7 +13,7 @@
               <h1><a type="button" name="add" id="add" value="Add" class="btn btn-primary" href="<?php echo base_url('admin/city/add');?>">Add</a></h1>
             </div>
             <div class="col-md-3">
-              <form name="excelform" id="excelform" enctype="multipart/form-data" action="<?php echo base_url('admin/state/importExcel');?>" method="POST">
+              <form name="excelform" id="excelform" enctype="multipart/form-data" action="<?php echo base_url('admin/state/importExcel');?>" method="POST" onsubmit="return validate()">
                 <div class="input-group" align="right">
                   <input type="file" name="excelfile" id="excelfile" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2">
                   <div class="input-group-append">
@@ -70,4 +70,23 @@
         });   
       
   });
+
+
+  function validate()
+  {
+      var valid = true;
+
+      var fileInput = $.trim($("#excelfile").val());
+      var ext = $('#excelfile').val().split('.').pop().toLowerCase();
+      if (fileInput && fileInput !== '') {   
+        if($.inArray(ext, ['xlsx']) == -1) {
+          $('#file-info').html('Attach xlsx file.');
+          valid = false;
+        }else{
+          $('#file-info').html('');
+        } 
+      }
+
+      return valid;
+  }
 </script>

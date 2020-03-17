@@ -266,6 +266,7 @@
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/port">Ports</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li>
                       </ul>
                   </div>
               </li>

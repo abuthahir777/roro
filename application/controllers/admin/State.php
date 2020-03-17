@@ -167,46 +167,53 @@ class State extends CI_Controller
 					if($countryCode != "" && $countryName != "")
 					{
 						$countryStatus = $this->Excel_Model->countryCheck($countryCode,$countryName);
-					}
-					
 
-					if(isset($countryStatus))
-					{
-						$this->Excel_Model->countryInsert($countryCode,$countryName);
-						$countryStatus = $this->Excel_Model->countryGet($countryCode);
+						if(!isset($countryStatus))
+						{
+							$this->Excel_Model->countryInsert($countryCode,$countryName);
+							$countryStatus = $this->Excel_Model->countryGet($countryCode);
 
-					}
+						}
 
-
-					$stateCode = $worksheet->getCellByColumnAndRow(2,$row)->getValue();
-					$stateName = $worksheet->getCellByColumnAndRow(3,$row)->getValue();
-					$stateStatus = $this->Excel_Model->stateCheck($countryStatus->countryId,$stateCode,$stateName);
-
-
-					if(!$stateStatus)
-					{
-						$this->Excel_Model->stateInsert($countryStatus->countryId,$stateCode,$stateName);
-						$stateStatus = $this->Excel_Model->stateGet($countryStatus->countryId,$stateCode);
+						$stateCode = $worksheet->getCellByColumnAndRow(2,$row)->getValue();
+						$stateName = $worksheet->getCellByColumnAndRow(3,$row)->getValue();
 						
+						if($stateCode != "" && $stateName !="")
+						{
+							$stateStatus = $this->Excel_Model->stateCheck($countryStatus->countryId,$stateCode,$stateName);
+
+							if(!isset($stateStatus))
+							{
+								$this->Excel_Model->stateInsert($countryStatus->countryId,$stateCode,$stateName);
+								$stateStatus = $this->Excel_Model->stateGet($countryStatus->countryId,$stateCode);
+								
+							}
+
+
+							$cityCode = $worksheet->getCellByColumnAndRow(4,$row)->getValue();
+							$cityName = $worksheet->getCellByColumnAndRow(5,$row)->getValue();
+							
+							if($cityCode != "" && $cityName != "")
+							{
+								$cityStatus = $this->Excel_Model->cityCheck($stateStatus->countryId,$stateStatus->stateId,$cityCode);
+
+								if(!isset($cityStatus))
+								{
+									$this->Excel_Model->cityInsert($stateStatus->countryId,$stateStatus->stateId,$cityCode,$cityName);
+									$cityStatus = $this->Excel_Model->cityGet($stateStatus->countryId,$stateStatus->stateId,$cityCode);
+									
+								}
+							}
+
+								
+						}
+
+							
 					}
-
-
-					$cityCode = $worksheet->getCellByColumnAndRow(4,$row)->getValue();
-					$cityName = $worksheet->getCellByColumnAndRow(5,$row)->getValue();
-					$cityStatus = $this->Excel_Model->cityCheck($stateStatus->countryId,$stateStatus->stateId,$cityCode);
-
-					if(!$cityStatus)
-					{
-						$this->Excel_Model->cityInsert($stateStatus->countryId,$stateStatus->stateId,$cityCode,$cityName);
-						$cityStatus = $this->Excel_Model->cityGet($stateStatus->countryId,$stateStatus->stateId,$cityCode);
 						
-					}
-					
 
 				}
-
-				
-				
+			
 			}
 
 			header("Location: ".$this->page);
