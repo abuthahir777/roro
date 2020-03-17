@@ -190,7 +190,7 @@
         </div>
       </nav>
       <nav class="bottom-navbar">
-        <div class="container">
+        <div class="" align="center">
             <ul class="nav page-navigation">
               <li class="nav-item">
                 <a class="nav-link" href="">
@@ -267,6 +267,19 @@
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li>
+                      </ul>
+                  </div>
+              </li>
+              <li class="nav-item">
+                  <a href="#" class="nav-link">
+                    <i class="mdi mdi-account menu-icon"></i>
+                    <span class="menu-title">User Settings</span>
+                    <i class="menu-arrow"></i>
+                  </a>
+                  <div class="submenu">
+                      <ul class="submenu-item">
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/users">Users</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/module">Module</a></li>
                       </ul>
                   </div>
               </li>
