@@ -11,6 +11,7 @@ class Currency_Model extends CI_Model
     function save()
     {
         $this->db->insert('currency',[
+            'currencyCode'=>$this->input->post('code'),
             'currencyName'=>$this->input->post('currency'),
             'countryid'=>$this->input->post('country'),
             'active_status'=>1,

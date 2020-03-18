@@ -105,10 +105,14 @@ class Currency extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
+			}
+			else
+			{
+				$sub_array[] = '<div align="center"><i class="fa fa-edit"></i></div>';
 			}
 
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 

@@ -47,6 +47,9 @@ class Permission {
           }
       }
 
-      return $data;
+      if($data != "")
+      {
+          return $data;
+      }
   }
 }
