@@ -12,13 +12,11 @@ class Currency extends CI_Controller
 
 		$this->load->model(array('Currency_Model','Country_Model'));
 
-		$this->load->library(array('Layouts'));
-
 		$this->page = $this->config->item("base_url")."/admin/currency";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -110,7 +108,7 @@ class Currency extends CI_Controller
 			}
 			else
 			{
-				$sub_array[] = '<div align="center"><i class="fa fa-edit"></i></div>';
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
 			}
 
 			$data[] = $sub_array;  

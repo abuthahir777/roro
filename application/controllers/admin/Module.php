@@ -12,13 +12,11 @@ class Module extends CI_Controller
 
 		$this->load->model(array('User_Model'));
 
-		$this->load->library(array('Layouts'));
-
 		$this->page = $this->config->item("base_url")."/admin/module";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -37,6 +35,13 @@ class Module extends CI_Controller
 		$fetch_data = $this->User_Model->fetch_dataModule();  
 		$data = array();  
 		$i=1;
+
+$permission['view'] = "View";
+$permission['create'] = "Create";
+$permission['update'] = "Update";
+$permission['delete'] = "Delete";
+$permission['status'] = "Status";
+
 		foreach($fetch_data as $row)  
 		{  
 			$sub_array = array(); 
@@ -44,7 +49,6 @@ class Module extends CI_Controller
 			$sub_array[] = $row->moduleName;
 			$sub_array[] = $row->operationName;
 			$sub_array[] = $row->tableName;
-
 
 			if($row->active_status == 1)
 			{
@@ -99,10 +103,16 @@ class Module extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
+			}
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
 			}
 
 
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			
 			$data[] = $sub_array;  
 			$i++;
 

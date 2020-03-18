@@ -12,11 +12,11 @@ class Country extends CI_Controller
 
 		$this->load->model(array('Country_Model'));
 
-		$this->load->library(array('Layouts'));
+		$this->page = $this->config->item("base_url")."/admin/country";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -89,16 +89,20 @@ class Country extends CI_Controller
 
 				if(isset($permission['delete']))
 				{
-					$delete = '<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+					$delete = '<a href ="'.base_url('admin/country').'/delete/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
 				else
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
 			}
-
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
+			}
+			
 			$data[] = $sub_array;  
 			$i++;
 
@@ -121,14 +125,14 @@ class Country extends CI_Controller
 	function save()
 	{
 		$this->Country_Model->save();
-		header("Location:".$this->config->item("base_url")."/admin/country");
+		header("Location:".$this->page);
 	}
 
 
 	function status()
 	{
 		$this->Country_Model->status();
-		header("Location:".$this->config->item("base_url")."/admin/country");
+		header("Location:".$this->page);
 
 	}
 
@@ -144,13 +148,13 @@ class Country extends CI_Controller
 	function update()
 	{
 		$this->Country_Model->update();
-		header("Location:".$this->config->item("base_url")."/admin/country");
+		header("Location:".$this->page);
 	}
 
 	function delete()
 	{
 		$this->Country_Model->delete();
-		header("Location:".$this->config->item("base_url")."/admin/country");
+		header("Location:".$this->page);
 	}
 
 

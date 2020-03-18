@@ -12,13 +12,11 @@ class Role extends CI_Controller
 
 		$this->load->model(array('User_Model'));
 
-		$this->load->library(array('Layouts','Permission'));
-
 		$this->page = $this->config->item("base_url")."/admin/role";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -37,6 +35,13 @@ class Role extends CI_Controller
 		$fetch_data = $this->User_Model->fetch_dataRole();  
 		$data = array();  
 		$i=1;
+
+$permission['view'] = "View";
+$permission['create'] = "Create";
+$permission['update'] = "Update";
+$permission['delete'] = "Delete";
+$permission['status'] = "Status";
+
 		foreach($fetch_data as $row)  
 		{  
 			$sub_array = array(); 
@@ -97,10 +102,14 @@ class Role extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
 			}
-
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
+			}
+  
 			$data[] = $sub_array;  
 			$i++;
 

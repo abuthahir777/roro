@@ -132,6 +132,7 @@ class User_Model extends CI_Model
         {
             $this->db->where('moduleId',$this->uri->segment(4));
         }
+        $this->db->where('delete_status',0)->where('active_status',0);
         $data = $this->db->get();
 
         if($action == 'specific')
@@ -352,14 +353,26 @@ class User_Model extends CI_Model
 
     function saveUser()
     {
-        return $this->db->insert('user',[
-            'firstName' => $this->input->post('fname'),
-            'lastName' => $this->input->post('lname'),
-            'userCode' => $this->input->post('userid'),
-            'userEmail' => $this->input->post('email'),
-            'userPassword' => md5($this->input->post('password')),
-            'userMobile' => $this->input->post('mobile'),
-            'roleId' => $this->input->post('role'),
+        // return $this->db->insert('user',[
+        //     'firstName' => $this->input->post('fname'),
+        //     'lastName' => $this->input->post('lname'),
+        //     'userCode' => $this->input->post('userid'),
+        //     'userEmail' => $this->input->post('email'),
+        //     'userPassword' => md5($this->input->post('password')),
+        //     'userMobile' => $this->input->post('mobile'),
+        //     'roleId' => $this->input->post('role'),
+        //     'active_status' => 0,
+        //     'delete_status' => 0
+        // ]);
+
+        $this->db->insert('user',[
+            'firstName' => "Admin",
+            'lastName' => "Admin",
+            'userCode' => "Admin",
+            'userEmail' => "admin@gmail.com",
+            'userPassword' => md5("admin"),
+            'userMobile' => "9645143007",
+            'roleId' =>18,
             'active_status' => 0,
             'delete_status' => 0
         ]);

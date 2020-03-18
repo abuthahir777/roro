@@ -18,7 +18,6 @@ class Permission {
       $permissions = $this->CI->User_Model->getPermissions($roleId,$tableId);
       $data = array();
 
-
       foreach($permissions as $permission)
       {
       		if($permission->operationId == 1)
@@ -47,7 +46,7 @@ class Permission {
           }
       }
 
-      if($data != "")
+      if($data)
       {
           return $data;
       }

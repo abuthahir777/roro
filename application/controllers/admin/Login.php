@@ -37,12 +37,10 @@ class Login extends CI_Controller
 
 			$data = $this->User_Model->validate($email,$password);
 
-			echo '<pre>'; print_r($data); echo '</pre>';
-
 			if(isset($data))
 			{
 				$userdata = array('fname'=>$data->firstName,'lname'=>$data->lastName,'userId'=>$data->userCode,'email'=>$data->userEmail,'mobile'=>$data->userMobile,'roleId'=>$data->roleId,'loggedin'=> TRUE);
-				$this->session->set_userdata($userdata);
+				$this->session->set_userdata('userdata',$userdata);
 
 				header("Location:". $this->page."/country");
 			}
@@ -55,6 +53,7 @@ class Login extends CI_Controller
 		}
 		else
 		{
+			echo "NOT";exit();
 			header("Location:".$this->page);
 		}
 

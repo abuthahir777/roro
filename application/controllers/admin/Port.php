@@ -12,13 +12,11 @@ class Port extends CI_Controller
 
 		$this->load->model(array('State_Model','Country_Model','Port_Model'));
 
-		$this->load->library(array('Layouts'));
-
 		$this->page = $this->config->item("base_url")."/admin/port";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -100,10 +98,14 @@ class Port extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
 			}
-
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
+			}
+  
 			$data[] = $sub_array;  
 			$i++;
 

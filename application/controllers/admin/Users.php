@@ -12,13 +12,11 @@ class Users extends CI_Controller
 
 		$this->load->model(array('User_Model','Country_Model','City_Model'));
 
-		$this->load->library(array('Layouts','Permission'));
-
 		$this->page = $this->config->item("base_url")."/admin/users";
 
 		if($this->session->userdata('userdata') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -37,6 +35,13 @@ class Users extends CI_Controller
 		$fetch_data = $this->User_Model->fetch_dataUser();  
 		$data = array();  
 		$i=1;
+
+$permission['view'] = "View";
+$permission['create'] = "Create";
+$permission['update'] = "Update";
+$permission['delete'] = "Delete";
+$permission['status'] = "Status";
+
 		foreach($fetch_data as $row)  
 		{  
 			$sub_array = array(); 
@@ -50,11 +55,11 @@ class Users extends CI_Controller
 
 			if($row->active_status == 1)
 			{
-				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';								
+				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';							
 			}
 			else
 			{
-				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
+				$sub_array[] = '<span class="badge badge-success">Active</span>';				
 			}
 
 			if(isset($permission))
@@ -101,10 +106,14 @@ class Users extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
+			}
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
 			}
 
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 

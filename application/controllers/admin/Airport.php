@@ -12,13 +12,11 @@ class Airport extends CI_Controller
 
 		$this->load->model(array('State_Model','Country_Model','Airport_Model'));
 
-		$this->load->library(array('Layouts'));
-
 		$this->page = $this->config->item("base_url")."/admin/airport";
 
 		if($this->session->userdata('userId') == NULL)
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -99,10 +97,14 @@ class Airport extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
 			}
-
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS</div>';
+			}
+ 
 			$data[] = $sub_array;  
 			$i++;
 
