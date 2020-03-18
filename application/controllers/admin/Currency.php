@@ -15,6 +15,11 @@ class Currency extends CI_Controller
 		$this->load->library(array('Layouts'));
 
 		$this->page = $this->config->item("base_url")."/admin/currency";
+
+		if($this->session->userdata('userdata') == NULL)
+		{
+			header("Location:".$this->config->item("base_url")."/admin");
+		}
 	
 	}
 
@@ -33,6 +38,8 @@ class Currency extends CI_Controller
 
 	function fetch()
 	{
+		$permission = $this->permission->setRights($this->session->userdata('roleId'),6);
+
 		$fetch_data = $this->Currency_Model->fetch_data();  
 		$data = array();  
 		$i=1;
@@ -44,24 +51,64 @@ class Currency extends CI_Controller
 			$sub_array[] = $row->currencyName;
 			$sub_array[] = $row->countryName;
 
+
 			if($row->active_status == 1)
 			{
-				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';
-				$status = '<a href ="'.base_url('admin/currency').'/status/activate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';								
 			}
 			else
 			{
-				$sub_array[] = '<span class="badge badge-success">Active</span>'; 
-				$status = '<a href ="'.base_url('admin/currency').'/status/deactivate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check"></i></a>';
+				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
+			}
+
+			if(isset($permission))
+			{
+				if(isset($permission['view']))
+				{
+					$view = '';
+				}
+				else
+				{
+					$view = '';
+				}
+
+				if(isset($permission['status']))
+				{
+					if($row->active_status == 1)
+					{
+						$status = '<a href ="'.base_url('admin/currency').'/status/activate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+					}
+					else
+					{
+						$status = '<a href ="'.base_url('admin/currency').'/status/deactivate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check"></i></a>';
+					}
+				}
+				else
+				{
+					$status = '';
+				}
+
+				if(isset($permission['update']))
+				{
+					$update = '<a href ="'.base_url('admin/currency').'/edit/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+				}
+				else
+				{
+					$update = '';
+				}
+
+				if(isset($permission['delete']))
+				{
+					$delete = '<a href ="'.base_url('admin/currency').'/delete/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+				}
+				else
+				{
+					$delete = '';
+				}
 			}
 
 
-			$sub_array[] = '<div align="center">
-			'.$status.'&nbsp&nbsp
-			<a href ="'.base_url('admin/currency').'/edit/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-edit"></i></a>
-			&nbsp&nbsp
-			<a href ="'.base_url('admin/currency').'/delete/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-trash"></i></a>
-			</div>';   
+			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 

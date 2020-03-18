@@ -27,23 +27,24 @@ class Login extends CI_Controller
 
 	public function validate()
 	{
-		$this->form_validation->set_rules('username','Username','required');
+		$this->form_validation->set_rules('email','Email','required');
 		$this->form_validation->set_rules('password','Password','required');
 
 		if($this->form_validation->run())
 		{
-			$username=$this->input->post('username');
+			$email=$this->input->post('email');
 			$password=$this->input->post('password');
 
-			echo $data = $this->User_Model->validate($username,$password);
-			exit();
+			$data = $this->User_Model->validate($email,$password);
 
-			if(md5($password)==$data->password)
+			echo '<pre>'; print_r($data); echo '</pre>';
+
+			if(isset($data))
 			{
-				$userdata = array('email'=>$data->username,'user'=>'Admin','loggedin'=> TRUE);
-				$this->session->set_userdata('userdata',$userdata);
+				$userdata = array('fname'=>$data->firstName,'lname'=>$data->lastName,'userId'=>$data->userCode,'email'=>$data->userEmail,'mobile'=>$data->userMobile,'roleId'=>$data->roleId,'loggedin'=> TRUE);
+				$this->session->set_userdata($userdata);
 
-				header("Location:". $this->config->item("base_url")."admin/country");
+				header("Location:". $this->page."/country");
 			}
 			else
 			{
@@ -60,21 +61,10 @@ class Login extends CI_Controller
 	}
 
 
-	// function register()
-	// {
-	// 	$this->load->view('pages/admin/register');
-	// }
-
-	// function register_form()
-	// {
-	// 	$this->User_Model->save();
-	// }
-
-
 	public function logout()
 	{
 			$this->session->unset_userdata('userdata');
-			redirect('admin');
+			header("Location:".$this->page);
 	}
 
 

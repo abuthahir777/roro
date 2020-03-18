@@ -19,6 +19,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
   </head>
   <body>
     <div class="container-scroller">
@@ -167,7 +170,7 @@
                 </li>
                 <li class="nav-item nav-profile dropdown">
                   <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
-                    <span class="nav-profile-name">Admin</span>
+                    <span class="nav-profile-name"><?php echo $this->session->userdata('email');?></span>
                     <span class="online-status"></span>
                     <img src="<?php echo base_url('assets/admin');?>/images/faces/face28.png" alt="profile"/>
                   </a>
@@ -176,7 +179,7 @@
                         <i class="mdi mdi-settings text-primary"></i>
                         Settings
                       </a>
-                      <a class="dropdown-item" href="">
+                      <a class="dropdown-item" href="<?php echo base_url();?>admin/login/logout">
                         <i class="mdi mdi-logout text-primary"></i>
                         Logout
                       </a>
@@ -280,6 +283,7 @@
                       <ul class="submenu-item">
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/users">Users</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/module">Module</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/role">Roles</a></li>
                       </ul>
                   </div>
               </li>

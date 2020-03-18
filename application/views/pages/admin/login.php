@@ -29,11 +29,10 @@
                 <div class="brand-logo">
                   <img src="" alt="logo"><h3>Admin</h3>
                 </div>
-                <h4>Hello! let's get started</h4>
                 <h6 class="font-weight-light">Sign in to continue.</h6>
                 <form class="pt-3" id="loginform" name="loginform" method="post" action="<?php echo base_url();?>admin/login/validate">
                   <div class="form-group">
-                    <input type="text" class="form-control form-control-lg" id="username" name="username" placeholder="Username">
+                    <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder="Email">
                   </div>
                   <div class="form-group">
                     <input type="password" class="form-control form-control-lg" id="password" name="password" placeholder="Password">

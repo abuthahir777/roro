@@ -15,6 +15,11 @@ class Airport extends CI_Controller
 		$this->load->library(array('Layouts'));
 
 		$this->page = $this->config->item("base_url")."/admin/airport";
+
+		if($this->session->userdata('userId') == NULL)
+		{
+			header("Location:".$this->config->item("base_url")."/admin");
+		}
 	
 	}
 
@@ -28,6 +33,8 @@ class Airport extends CI_Controller
 	function fetch()
 	{
 		$fetch_data = $this->Airport_Model->fetch_data();  
+		$permission = $this->permission->setRights($this->session->userdata('roleId'),4);
+
 		$data = array();  
 		$i=1;
 		foreach($fetch_data as $row)  
@@ -41,22 +48,61 @@ class Airport extends CI_Controller
 
 			if($row->active_status == 1)
 			{
-				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';
-				$status = '<a href ="'.base_url('admin/airport').'/status/activate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';								
 			}
 			else
 			{
-				$sub_array[] = '<span class="badge badge-success">Active</span>'; 
-				$status = '<a href ="'.base_url('admin/airport').'/status/deactivate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check"></i></a>';
+				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
+			}
+
+			if(isset($permission))
+			{
+				if(isset($permission['view']))
+				{
+					$view = '';
+				}
+				else
+				{
+					$view = '';
+				}
+
+				if(isset($permission['status']))
+				{
+					if($row->active_status == 1)
+					{
+						$status = '<a href ="'.base_url('admin/airport').'/status/activate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check"></i></a>';
+					}
+					else
+					{
+						$status = '<a href ="'.base_url('admin/airport').'/status/deactivate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check"></i></a>';
+					}
+				}
+				else
+				{
+					$status = '';
+				}
+
+				if(isset($permission['update']))
+				{
+					$update = '<a href ="'.base_url('admin/airport').'/edit/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+				}
+				else
+				{
+					$update = '';
+				}
+
+				if(isset($permission['delete']))
+				{
+					$delete = '<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+				}
+				else
+				{
+					$delete = '';
+				}
 			}
 
 
-			$sub_array[] = '<div align="center">
-			'.$status.'&nbsp&nbsp
-			<a href ="'.base_url('admin/airport').'/edit/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>
-			&nbsp&nbsp
-			<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>
-			</div>';   
+			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 

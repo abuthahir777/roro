@@ -13,6 +13,11 @@ class Country extends CI_Controller
 		$this->load->model(array('Country_Model'));
 
 		$this->load->library(array('Layouts'));
+
+		if($this->session->userdata('userdata') == NULL)
+		{
+			header("Location:".$this->config->item("base_url")."/admin");
+		}
 	
 	}
 
@@ -25,6 +30,8 @@ class Country extends CI_Controller
 
 	function fetch()
 	{
+		$permission = $this->permission->setRights($this->session->userdata('roleId'),1);
+
 		$fetch_data = $this->Country_Model->fetch_data();  
 		$data = array();  
 		$i=1;
@@ -37,22 +44,61 @@ class Country extends CI_Controller
 
 			if($row->active_status == 1)
 			{
-				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';
-				$status = '<a href ="'.base_url('admin/country').'/status/activate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+				$sub_array[] = '<span class="badge badge-danger">In-Active</span>';								
 			}
 			else
 			{
-				$sub_array[] = '<span class="badge badge-success">Active</span>'; 
-				$status = '<a href ="'.base_url('admin/country').'/status/deactivate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-check"></i></a>';
+				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
+			}
+
+			if(isset($permission))
+			{
+				if(isset($permission['view']))
+				{
+					$view = '';
+				}
+				else
+				{
+					$view = '';
+				}
+
+				if(isset($permission['status']))
+				{
+					if($row->active_status == 1)
+					{
+						$status = '<a href ="'.base_url('admin/country').'/status/activate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+					}
+					else
+					{
+						$status = '<a href ="'.base_url('admin/country').'/status/deactivate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-check"></i></a>';
+					}
+				}
+				else
+				{
+					$status = '';
+				}
+
+				if(isset($permission['update']))
+				{
+					$update = '<a href ="'.base_url('admin/country').'/edit/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+				}
+				else
+				{
+					$update = '';
+				}
+
+				if(isset($permission['delete']))
+				{
+					$delete = '<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+				}
+				else
+				{
+					$delete = '';
+				}
 			}
 
 
-			$sub_array[] = '<div align="center">
-			'.$status.'&nbsp&nbsp
-			<a href ="'.base_url('admin/country').'/edit/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-edit"></i></a>
-			&nbsp&nbsp
-			<a href ="'.base_url('admin/country').'/delete/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-trash"></i></a>
-			</div>';   
+			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 
