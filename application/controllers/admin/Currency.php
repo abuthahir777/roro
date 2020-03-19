@@ -8,37 +8,39 @@ class Currency extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->helper(array('form', 'url','html'));
-
 		$this->load->model(array('Currency_Model','Country_Model'));
 
-		$this->load->library(array('Layouts'));
+		$this->page = $this->config->item("base_url_admin")."currency";
 
-		$this->page = $this->config->item("base_url")."/admin/currency";
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),6);
 
-		if($this->session->userdata('userdata') == NULL)
+		if(!$this->session->userdata('fname') && 
+			!$this->session->userdata('lname') &&
+			!$this->session->userdata('userId') && 
+			!$this->session->userdata('email') &&
+			!$this->session->userdata('mobile') && 
+			!$this->session->userdata('roleId') &&
+			!$this->session->userdata('loggedin'))
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
 
-	function check()
-	{
-		$data = $this->State_Model->alldatas();
-		echo '<pre>'; print_r($data); echo '</pre>';
-	}
-
-
 	function index()
 	{
+		if(isset($this->permission['view']))
+		{
+			$data['view'] = "View";
+		}
+		else{ $data = ""; }
+
 		$this->layouts->title('State Table');
-		$this->layouts->view('pages/admin/currency/table','','admin');
+		$this->layouts->view('pages/admin/currency/table',$data,'admin');
 	}
 
 	function fetch()
 	{
-		$permission = $this->permission->setRights($this->session->userdata('roleId'),6);
 
 		$fetch_data = $this->Currency_Model->fetch_data();  
 		$data = array();  
@@ -61,9 +63,9 @@ class Currency extends CI_Controller
 				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
 			}
 
-			if(isset($permission))
+			if(isset($this->permission))
 			{
-				if(isset($permission['view']))
+				if(isset($this->permission['view']))
 				{
 					$view = '';
 				}
@@ -72,7 +74,7 @@ class Currency extends CI_Controller
 					$view = '';
 				}
 
-				if(isset($permission['status']))
+				if(isset($this->permission['status']))
 				{
 					if($row->active_status == 1)
 					{
@@ -88,7 +90,7 @@ class Currency extends CI_Controller
 					$status = '';
 				}
 
-				if(isset($permission['update']))
+				if(isset($this->permission['update']))
 				{
 					$update = '<a href ="'.base_url('admin/currency').'/edit/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
@@ -97,7 +99,7 @@ class Currency extends CI_Controller
 					$update = '';
 				}
 
-				if(isset($permission['delete']))
+				if(isset($this->permission['delete']))
 				{
 					$delete = '<a href ="'.base_url('admin/currency').'/delete/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
@@ -110,7 +112,7 @@ class Currency extends CI_Controller
 			}
 			else
 			{
-				$sub_array[] = '<div align="center"><i class="fa fa-edit"></i></div>';
+				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
 			}
 
 			$data[] = $sub_array;  

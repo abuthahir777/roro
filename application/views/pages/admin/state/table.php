@@ -8,10 +8,12 @@
 
         <div class="col-md-6" align="center"></div>
 
-        <div class="col-md-2" align="right">  
+        <div class="col-md-2" align="right">
+          <?php if(isset($create)){?>
           <a href="<?php echo base_url('admin/state/add');?>">
               <input type="submit" name="add" id="add" value="Add" class="btn btn-primary">
           </a>
+          <?php } ?>
         </div>
 
       </div>

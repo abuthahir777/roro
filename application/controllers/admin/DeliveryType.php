@@ -8,17 +8,21 @@ class DeliveryType extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->helper(array('form', 'url','html'));
-
 		$this->load->model(array('Delivery_Model'));
 
-		$this->load->library(array('Layouts'));
+		$this->page = $this->config->item("base_url_admin")."deliverytype";
 
-		$this->page = $this->config->item("base_url")."/admin/deliverytype";
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
 
-		if($this->session->userdata('userdata') == NULL)
+		if(!$this->session->userdata('fname') && 
+			!$this->session->userdata('lname') &&
+			!$this->session->userdata('userId') && 
+			!$this->session->userdata('email') &&
+			!$this->session->userdata('mobile') && 
+			!$this->session->userdata('roleId') &&
+			!$this->session->userdata('loggedin'))
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -26,8 +30,14 @@ class DeliveryType extends CI_Controller
 
 	function index()
 	{
+		if(isset($this->permission['create']))
+		{
+			$data['create'] = "create";
+		}
+		else{ $data = ""; }
+
 		$this->layouts->title('Delivery Types Table');
-		$this->layouts->view('pages/admin/deliverytype/table','','admin');
+		$this->layouts->view('pages/admin/deliverytype/table',$data,'admin');
 	}
 
 	function fetch()
@@ -53,9 +63,9 @@ class DeliveryType extends CI_Controller
 				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
 			}
 
-			if(isset($permission))
+			if(isset($this->permission))
 			{
-				if(isset($permission['view']))
+				if(isset($this->permission['view']))
 				{
 					$view = '';
 				}
@@ -64,7 +74,7 @@ class DeliveryType extends CI_Controller
 					$view = '';
 				}
 
-				if(isset($permission['status']))
+				if(isset($this->permission['status']))
 				{
 					if($row->active_status == 1)
 					{
@@ -80,7 +90,7 @@ class DeliveryType extends CI_Controller
 					$status = '';
 				}
 
-				if(isset($permission['update']))
+				if(isset($this->permission['update']))
 				{
 					$update = '<a href ="'.base_url('admin/deliverytype').'/edit/'.$row->deliveryTypeId.'" type="submit" name="edit" id="'.$row->deliveryTypeId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
@@ -89,7 +99,7 @@ class DeliveryType extends CI_Controller
 					$update = '';
 				}
 
-				if(isset($permission['delete']))
+				if(isset($this->permission['delete']))
 				{
 					$delete = '<a href ="'.base_url('admin/deliverytype').'/delete/'.$row->deliveryTypeId.'" type="submit" name="edit" id="'.$row->deliveryTypeId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
@@ -97,10 +107,14 @@ class DeliveryType extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
+			}
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
 			}
 
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
 			$data[] = $sub_array;  
 			$i++;
 

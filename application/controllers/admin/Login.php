@@ -8,13 +8,9 @@ class Login extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->helper(array('form', 'url','html'));
-
 		$this->load->model(array('User_Model'));
 
-		$this->load->library(array('Layouts'));
-
-		$this->page = $this->config->item("base_url")."/admin";
+		$this->page = $this->config->item("base_url_admin");
 	
 	}
 
@@ -36,8 +32,6 @@ class Login extends CI_Controller
 			$password=$this->input->post('password');
 
 			$data = $this->User_Model->validate($email,$password);
-
-			echo '<pre>'; print_r($data); echo '</pre>';
 
 			if(isset($data))
 			{
@@ -63,7 +57,14 @@ class Login extends CI_Controller
 
 	public function logout()
 	{
-			$this->session->unset_userdata('userdata');
+			$this->session->unset_userdata('fname');
+			$this->session->unset_userdata('lname');
+			$this->session->unset_userdata('userId');
+			$this->session->unset_userdata('email');
+			$this->session->unset_userdata('mobile');
+			$this->session->unset_userdata('roleId');
+			$this->session->unset_userdata('loggedin');
+
 			header("Location:".$this->page);
 	}
 

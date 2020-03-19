@@ -8,32 +8,45 @@ class Airport extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->helper(array('form', 'url','html'));
-
 		$this->load->model(array('State_Model','Country_Model','Airport_Model'));
 
-		$this->load->library(array('Layouts'));
+		$this->page = $this->config->item("base_url_admin")."airport";
 
-		$this->page = $this->config->item("base_url")."/admin/airport";
-
-		if($this->session->userdata('userId') == NULL)
+		if(!$this->session->userdata('fname') && 
+			!$this->session->userdata('lname') &&
+			!$this->session->userdata('userId') && 
+			!$this->session->userdata('email') &&
+			!$this->session->userdata('mobile') && 
+			!$this->session->userdata('roleId') &&
+			!$this->session->userdata('loggedin'))
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
+
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
 	
 	}
 
 
 	function index()
 	{
+
+		if(isset($permission['create']))
+		{
+			$data['create'] = "Create";
+		}
+		else
+		{
+			$data = "";
+		}
 		$this->layouts->title('State Table');
-		$this->layouts->view('pages/admin/airport/table','','admin');
+		$this->layouts->view('pages/admin/airport/table',$data,'admin');
 	}
 
 	function fetch()
 	{
 		$fetch_data = $this->Airport_Model->fetch_data();  
-		$permission = $this->permission->setRights($this->session->userdata('roleId'),4);
+		
 
 		$data = array();  
 		$i=1;
@@ -55,9 +68,9 @@ class Airport extends CI_Controller
 				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
 			}
 
-			if(isset($permission))
+			if(isset($this->permission))
 			{
-				if(isset($permission['view']))
+				if(isset($this->permission['view']))
 				{
 					$view = '';
 				}
@@ -66,7 +79,7 @@ class Airport extends CI_Controller
 					$view = '';
 				}
 
-				if(isset($permission['status']))
+				if(isset($this->permission['status']))
 				{
 					if($row->active_status == 1)
 					{
@@ -82,7 +95,7 @@ class Airport extends CI_Controller
 					$status = '';
 				}
 
-				if(isset($permission['update']))
+				if(isset($this->permission['update']))
 				{
 					$update = '<a href ="'.base_url('admin/airport').'/edit/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
@@ -91,7 +104,7 @@ class Airport extends CI_Controller
 					$update = '';
 				}
 
-				if(isset($permission['delete']))
+				if(isset($this->permission['delete']))
 				{
 					$delete = '<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
@@ -99,10 +112,15 @@ class Airport extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
+			}
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
 			}
 
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+ 
 			$data[] = $sub_array;  
 			$i++;
 

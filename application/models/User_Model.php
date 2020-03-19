@@ -423,8 +423,8 @@ class User_Model extends CI_Model
 
     function deleteUser()
     {
-        $this->db->where('roleId',$this->uri->segment(4))
-                ->update('role',['delete_status'=>1
+        $this->db->where('userId',$this->uri->segment(4))
+                ->update('user',['delete_status'=>1
             ]);
     }
 
@@ -465,10 +465,12 @@ class User_Model extends CI_Model
         return $this->db->from('role')
                 ->join('accessrights','role.roleId = accessrights.roleId')
                 ->join('module','module.moduleId = accessrights.moduleId')
+                ->group_start()
                 ->where('role.roleId',$roleId)
                 ->where('module.tableId',$tableId)
                 ->where('module.active_status',0)
                 ->where('module.delete_status',0)
+                ->group_end()
                 ->get()
                 ->result();
     }

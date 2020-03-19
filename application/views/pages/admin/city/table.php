@@ -9,8 +9,10 @@
         <div class="col-md-6">
           <div class="row" align="right">
             <div class="col-md-4"></div>
-            <div class="col-md-3" align="right">  
+            <div class="col-md-3" align="right">
+              <?php if(isset($create)) {?>
               <h1><a type="button" name="add" id="add" value="Add" class="btn btn-primary" href="<?php echo base_url('admin/city/add');?>">Add</a></h1>
+              <?php } ?>
             </div>
             <div class="col-md-3">
               <form name="excelform" id="excelform" enctype="multipart/form-data" action="<?php echo base_url('admin/state/importExcel');?>" method="POST" onsubmit="return validate()">

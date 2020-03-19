@@ -8,17 +8,21 @@ class Port extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->helper(array('form', 'url','html'));
-
 		$this->load->model(array('State_Model','Country_Model','Port_Model'));
 
-		$this->load->library(array('Layouts'));
+		$this->page = $this->config->item("base_url_admin")."port";
 
-		$this->page = $this->config->item("base_url")."/admin/port";
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),5);
 
-		if($this->session->userdata('userdata') == NULL)
+		if(!$this->session->userdata('fname') && 
+			!$this->session->userdata('lname') &&
+			!$this->session->userdata('userId') && 
+			!$this->session->userdata('email') &&
+			!$this->session->userdata('mobile') && 
+			!$this->session->userdata('roleId') &&
+			!$this->session->userdata('loggedin'))
 		{
-			header("Location:".$this->config->item("base_url")."/admin");
+			header("Location:".$this->config->item("base_url_admin"));
 		}
 	
 	}
@@ -26,13 +30,18 @@ class Port extends CI_Controller
 
 	function index()
 	{
+		if(isset($this->permission['create']))
+		{
+			$data['create'] = "create";
+		}
+		else{ $data = ""; }
+
 		$this->layouts->title('State Table');
-		$this->layouts->view('pages/admin/port/table','','admin');
+		$this->layouts->view('pages/admin/port/table',$data,'admin');
 	}
 
 	function fetch()
 	{
-		$permission = $this->permission->setRights($this->session->userdata('roleId'),5);
 
 		$fetch_data = $this->Port_Model->fetch_data();  
 		$data = array();  
@@ -56,7 +65,7 @@ class Port extends CI_Controller
 				$sub_array[] = '<span class="badge badge-success">Active</span>'; 				
 			}
 
-			if(isset($permission))
+			if(isset($this->permission))
 			{
 				if(isset($permission['view']))
 				{
@@ -67,7 +76,7 @@ class Port extends CI_Controller
 					$view = '';
 				}
 
-				if(isset($permission['status']))
+				if(isset($this->permission['status']))
 				{
 					if($row->active_status == 1)
 					{
@@ -83,7 +92,7 @@ class Port extends CI_Controller
 					$status = '';
 				}
 
-				if(isset($permission['update']))
+				if(isset($this->permission['update']))
 				{
 					$update = '<a href ="'.base_url('admin/port').'/edit/'.$row->portId.'" type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
@@ -92,7 +101,7 @@ class Port extends CI_Controller
 					$update = '';
 				}
 
-				if(isset($permission['delete']))
+				if(isset($this->permission['delete']))
 				{
 					$delete = '<a href ="'.base_url('admin/port').'/delete/'.$row->portId.'" type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
@@ -100,10 +109,14 @@ class Port extends CI_Controller
 				{
 					$delete = '';
 				}
+
+				$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';
 			}
-
-
-			$sub_array[] = '<div align="center">'.$status.'&nbsp&nbsp'.$update.'&nbsp&nbsp'.$delete.'</div>';   
+			else
+			{
+				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
+			}
+  
 			$data[] = $sub_array;  
 			$i++;
 
