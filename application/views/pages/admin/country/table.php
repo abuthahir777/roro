@@ -1,3 +1,4 @@
+
 <div class="card">
     <div class="card-header">
       <div class="row">
@@ -30,6 +31,15 @@
               <th scope="col">Actions</th>
             </tr>
           </thead>
+          <tfoot>
+            <tr>
+              <th scope="col">SI No</th>
+              <th scope="col">Country Code</th>
+              <th scope="col">Country Name</th>
+              <th scope="col">Status</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </tfoot>
           <tbody>
 
           </tbody>
@@ -38,6 +48,7 @@
     </div>
 
 </div>
+
 
 
 <script type="text/javascript">

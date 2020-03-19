@@ -10,7 +10,7 @@
         <div class="col-md-6" align="center"></div>
 
         <div class="col-md-2" align="right">  
-          <a href="<?php echo base_url('admin/currency');?>">
+          <a href="<?php echo base_url('admin/deliverytype');?>">
               <input type="submit" name="back" id="back" value="Back" class="btn btn-primary">
           </a>
         </div>
@@ -19,11 +19,11 @@
       <div class="card-body">
         <?php if(isset($edit))
         { ?>
-          <form id="portform" action="<?php echo base_url();?>admin/currency/update" method="POST" onsubmit="return validate()">
+          <form id="portform" action="<?php echo base_url();?>admin/deliverytype/update" method="POST" onsubmit="return validate()">
         <?php } 
         else
         { ?>
-          <form id="portform" action="<?php echo base_url();?>admin/currency/save" method="POST" onsubmit="return validate()">
+          <form id="portform" action="<?php echo base_url();?>admin/deliverytype/save" method="POST" onsubmit="return validate()">
         <?php }
         ?>
             <?php if(isset($edit))

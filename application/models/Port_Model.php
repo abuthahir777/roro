@@ -11,8 +11,8 @@ class Port_Model extends CI_Model
     function save()
     {
         $this->db->insert('port',[
-            'portCode'=>$this->input->post('code'),
-            'portName'=>$this->input->post('port'),
+            'portCode'=>strtoupper($this->input->post('code')),
+            'portName'=>ucwords($this->input->post('port')),
             'stateId'=>$this->input->post('state'),
             'countryId'=>$this->input->post('country'),
             'active_status'=>1,
@@ -106,8 +106,8 @@ class Port_Model extends CI_Model
     {
         $this->db->where('portId',$this->input->post('id'))
                 ->update('port',[
-                    'portCode'=>$this->input->post('code'),
-                    'portName'=>$this->input->post('port'),
+                    'portCode'=>strtoupper($this->input->post('code')),
+                    'portName'=>ucwords($this->input->post('port')),
                     'stateId'=>$this->input->post('state'),
                     'countryId'=>$this->input->post('country')
             ]);

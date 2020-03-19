@@ -11,8 +11,8 @@ class Country_Model extends CI_Model
     function save()
     {
         $this->db->insert('country',[
-            'countryCode'=>$this->input->post('code'),
-            'countryName'=>$this->input->post('country'),
+            'countryCode'=>strtoupper($this->input->post('code')),
+            'countryName'=>ucwords($this->input->post('country')),
             'active_status'=>1,
             'delete_status'=>0]);
     }
@@ -105,8 +105,8 @@ class Country_Model extends CI_Model
     {
         $this->db->where('countryId',$this->input->post('id'))
                 ->update('country',[
-                    'countryCode'=>$this->input->post('code'),
-                    'countryName'=>$this->input->post('country')
+                    'countryCode'=>strtoupper($this->input->post('code')),
+                    'countryName'=>ucwords($this->input->post('country'))
             ]);
     }
 

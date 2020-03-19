@@ -11,8 +11,8 @@ class Excel_model extends CI_Model
     function countryInsert($countryCode,$countryName)
     {
         $this->db->insert('country',[
-            'countryCode'=>ucfirst($countryCode),
-            'countryName'=>ucfirst($countryName),
+            'countryCode'=>strtoupper($countryCode),
+            'countryName'=>ucwords($countryName),
             'active_status'=>0,
             'delete_status'=>0]);
     }
@@ -40,9 +40,9 @@ class Excel_model extends CI_Model
     function stateInsert($countryId,$stateCode,$stateName)
     {
         $this->db->insert('state',[
-            'stateCode'=>ucfirst($stateCode),
-            'stateName'=>ucfirst($stateName),
-            'countryId'=>ucfirst($countryId),
+            'stateCode'=>strtoupper($stateCode),
+            'stateName'=>ucwords($stateName),
+            'countryId'=>$countryId,
             'active_status'=>0,
             'delete_status'=>0]);
     }
@@ -84,10 +84,10 @@ class Excel_model extends CI_Model
     function cityInsert($countryId,$stateId,$cityCode,$cityName)
     {
         $this->db->insert('city',[
-            'cityCode'=>ucfirst($cityCode),
-            'cityName'=>ucfirst($cityName),
-            'stateId'=>ucfirst($stateId),
-            'countryId'=>ucfirst($countryId),
+            'cityCode'=>strtoupper($cityCode),
+            'cityName'=>ucwords($cityName),
+            'stateId'=>$stateId,
+            'countryId'=>$countryId,
             'active_status'=>0,
             'delete_status'=>0]);
     }

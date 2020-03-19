@@ -11,7 +11,7 @@ class Delivery_Model extends CI_Model
     function save()
     {
         $this->db->insert('deliverytype',[
-            'currencyName'=>$this->input->post('currency'),
+            'currencyName'=>ucfirst($this->input->post('currency')),
             'countryid'=>$this->input->post('country'),
             'active_status'=>1,
             'delete_status'=>0]);

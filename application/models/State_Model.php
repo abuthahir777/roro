@@ -11,8 +11,8 @@ class State_Model extends CI_Model
     function save()
     {
         $this->db->insert('state',[
-            'stateCode'=>$this->input->post('code'),
-            'stateName'=>$this->input->post('state'),
+            'stateCode'=>strtoupper($this->input->post('code')),
+            'stateName'=>ucwords($this->input->post('state')),
             'countryid'=>$this->input->post('country'),
             'active_status'=>1,
             'delete_status'=>0]);
@@ -123,8 +123,8 @@ class State_Model extends CI_Model
     {
         $this->db->where('stateId',$this->input->post('id'))
                 ->update('state',[
-                    'stateCode'=>$this->input->post('code'),
-                    'stateName'=>$this->input->post('state'),
+                    'stateCode'=>strtoupper($this->input->post('code')),
+                    'stateName'=>ucwords($this->input->post('state')),
                     'countryid'=>$this->input->post('country')
             ]);
     }

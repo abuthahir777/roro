@@ -103,7 +103,7 @@ class User_Model extends CI_Model
     function saveModule()
     {
         $this->db->insert('module',[
-            'moduleName' => $this->input->post('modulename'),
+            'moduleName' => ucwords($this->input->post('modulename')),
             'tableId' => $this->input->post('table'),
             'operationId' => $this->input->post('operation'),
             'active_status' => 0,
@@ -150,7 +150,7 @@ class User_Model extends CI_Model
     {
         $this->db->where('moduleId',$this->input->post('id'))
                 ->update('module',[
-                    'moduleName'=>$this->input->post('modulename'),
+                    'moduleName'=>ucwords($this->input->post('modulename')),
                     'tableId'=>$this->input->post('table'),
                     'operationId'=>$this->input->post('operation')
             ]);
@@ -225,7 +225,7 @@ class User_Model extends CI_Model
     function saveRole($rolename)
     {
         return $this->db->insert('role',[
-            'roleName' => $rolename,
+            'roleName' => ucwords($rolename),
             'active_status' => 0,
             'delete_status' => 0
         ]);
@@ -276,7 +276,7 @@ class User_Model extends CI_Model
     {
         $this->db->where('roleId',$roleId)
                 ->update('role',[
-                    'roleName'=>$this->input->post('rolename')
+                    'roleName'=>ucwords($this->input->post('rolename'))
             ]);
     }
 
@@ -355,10 +355,10 @@ class User_Model extends CI_Model
     function saveUser()
     {
         return $this->db->insert('user',[
-            'firstName' => $this->input->post('fname'),
-            'lastName' => $this->input->post('lname'),
-            'userCode' => $this->input->post('userid'),
-            'userEmail' => $this->input->post('email'),
+            'firstName' => ucwords($this->input->post('fname')),
+            'lastName' => ucwords($this->input->post('lname')),
+            'userCode' => strtoupper($this->input->post('userid')),
+            'userEmail' => strtolower($this->input->post('email')),
             'userPassword' => md5($this->input->post('password')),
             'userMobile' => $this->input->post('mobile'),
             'roleId' => $this->input->post('role'),
@@ -414,12 +414,12 @@ class User_Model extends CI_Model
     {
         $this->db->where('userId',$this->input->post('id'))
                 ->update('user',[
-                    'firstName'=>$this->input->post('fname'),
-                    'lastName'=>$this->input->post('lname'),
-                    'userCode'=>$this->input->post('userid'),
-                    'userEmail'=>$this->input->post('email'),
-                    'userMobile'=>$this->input->post('mobile'),
-                    'roleId'=>$this->input->post('role'),
+                    'firstName'=> ucwords($this->input->post('fname')),
+                    'lastName'=> ucwords($this->input->post('lname')),
+                    'userCode'=> strtoupper($this->input->post('userid')),
+                    'userEmail'=> strtolower($this->input->post('email')),
+                    'userMobile'=> $this->input->post('mobile'),
+                    'roleId'=> $this->input->post('role'),
             ]);
     }
 

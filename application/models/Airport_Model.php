@@ -11,8 +11,8 @@ class Airport_Model extends CI_Model
     function save()
     {
         $this->db->insert('airport',[
-            'airportCode'=>$this->input->post('code'),
-            'airportName'=>$this->input->post('airport'),
+            'airportCode'=>strtoupper($this->input->post('code')),
+            'airportName'=>ucwords($this->input->post('airport')),
             'stateId'=>$this->input->post('state'),
             'countryId'=>$this->input->post('country'),
             'active_status'=>1,
@@ -106,8 +106,8 @@ class Airport_Model extends CI_Model
     {
         $this->db->where('airportId',$this->input->post('id'))
                 ->update('airport',[
-                    'airportCode'=>$this->input->post('code'),
-                    'airportName'=>$this->input->post('airport'),
+                    'airportCode'=>strtoupper($this->input->post('code')),
+                    'airportName'=>ucwords($this->input->post('airport')),
                     'stateId'=>$this->input->post('state'),
                     'countryId'=>$this->input->post('country')
             ]);

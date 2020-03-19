@@ -11,8 +11,8 @@ class Currency_Model extends CI_Model
     function save()
     {
         $this->db->insert('currency',[
-            'currencyCode'=>$this->input->post('code'),
-            'currencyName'=>$this->input->post('currency'),
+            'currencyCode'=>strtoupper($this->input->post('code')),
+            'currencyName'=>ucwords($this->input->post('currency')),
             'countryid'=>$this->input->post('country'),
             'active_status'=>1,
             'delete_status'=>0]);
@@ -122,8 +122,8 @@ class Currency_Model extends CI_Model
     function update()
     {
         $this->db->where('currencyId',$this->input->post('id'))
-                ->update('currency',['currencyCode'=>$this->input->post('code'),
-                    'currencyName'=>$this->input->post('currency'),
+                ->update('currency',['currencyCode'=>strtoupper($this->input->post('code')),
+                    'currencyName'=>ucwords($this->input->post('currency')),
                     'countryid'=>$this->input->post('country')
             ]);
     }

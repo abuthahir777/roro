@@ -133,7 +133,7 @@ class DeliveryType extends CI_Controller
 		$data['state'] = $this->State_Model->getall();
 
 		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/airport/form',$data,'admin');
+		$this->layouts->view('pages/admin/deliverytype/form',$data,'admin');
 	}
 
 	function save()

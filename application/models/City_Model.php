@@ -11,8 +11,8 @@ class City_Model extends CI_Model
     function save()
     {
         $this->db->insert('city',[
-            'cityCode'=>$this->input->post('code'),
-            'cityName'=>$this->input->post('city'),
+            'cityCode'=>strtoupper($this->input->post('code')),
+            'cityName'=>ucwords($this->input->post('city')),
             'stateId'=>$this->input->post('state'),
             'countryId'=>$this->input->post('country'),
             'active_status'=>1,
@@ -106,8 +106,8 @@ class City_Model extends CI_Model
     {
         $this->db->where('cityId',$this->input->post('id'))
                 ->update('city',[
-                    'cityCode'=>$this->input->post('code'),
-                    'cityName'=>$this->input->post('city'),
+                    'cityCode'=>strtoupper($this->input->post('code')),
+                    'cityName'=>ucwords($this->input->post('city')),
                     'stateId'=>$this->input->post('state'),
                     'countryId'=>$this->input->post('country')
             ]);
