@@ -13,6 +13,8 @@ class User_Model extends CI_Model
         $status = $this->db->from('user')
                     ->where('userEmail',$email)
                     ->where('userPassword',md5($password))
+                    ->where('active_status',0)
+                    ->where('delete_status',0)
                     ->get();
 
         if($status->num_rows() > 0)

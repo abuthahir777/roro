@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 $config['base_url'] = 'http://localhost/roro';
-$config['base_url_admin'] = 'http://localhost/roro/admin';
+$config['base_url_admin'] = 'http://localhost/roro/admin/';
 
 /*
 |--------------------------------------------------------------------------

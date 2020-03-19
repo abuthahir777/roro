@@ -42,7 +42,6 @@ class DeliveryType extends CI_Controller
 
 	function fetch()
 	{
-		$permission = $this->permission->setRights($this->session->userdata('roleId'),7);
 
 		$fetch_data = $this->Delivery_Model->fetch_data();  
 		$data = array();  

@@ -25,7 +25,7 @@
               </form>
             </div>
             <div class="col-md-1" align="right">
-              <a class="btn btn-primary form-control" type="submit" name="download" id="download" href="<?php echo base_url('admin/state/download');?>"><i class="mdi mdi-download"></i></a>
+              <h1><a class="btn btn-primary form-control" type="submit" name="download" id="download" href="<?php echo base_url('admin/state/download');?>"><i class="mdi mdi-download"></i></a></h1>
             </div>
           </div>
         </div>
