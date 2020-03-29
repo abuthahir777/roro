@@ -1,5 +1,5 @@
 <?php
-class Country extends CI_Controller 
+class ShipmentFrequency extends CI_Controller 
 {
 	public function __construct()
 	{
@@ -8,11 +8,12 @@ class Country extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->model(array('Country_Model'));
+		$this->load->model(array('ShipmentFrequency_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."country";
+		$this->page = $this->config->item("base_url_admin")."frequency-of-shipment";
 
-		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),1);
+		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
+		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -36,22 +37,22 @@ class Country extends CI_Controller
 		}
 		else{ $data = ""; }
 
-		$this->layouts->title('Applications');
-		$this->layouts->view('pages/admin/country/table',$data,'admin');
+		$this->layouts->title('Shipment Frequency');
+		$this->layouts->view('pages/admin/shipmentfrequency/table',$data,'admin');
 	}
 
 	function fetch()
 	{
 
-		$fetch_data = $this->Country_Model->fetch_data();  
+		$fetch_data = $this->ShipmentFrequency_Model->fetch_data();  
 		$data = array();  
 		$i=1;
 		foreach($fetch_data as $row)  
 		{  
 			$sub_array = array(); 
 			$sub_array[] = $i;   
-			$sub_array[] = $row->countryCode;
-			$sub_array[] = $row->countryName;
+			$sub_array[] = $row->freqShipmentName;
+
 
 			if($row->active_status == 1)
 			{
@@ -77,11 +78,11 @@ class Country extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/country').'/status/activate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
+						$status = '<a href ="'.base_url('admin/shipmentfrequency').'/status/activate/'.$row->freqShipmentId.'" type="submit" name="delete" id="'.$row->freqShipmentId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/country').'/status/deactivate/'.$row->countryId.'" type="submit" name="delete" id="'.$row->countryId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
+						$status = '<a href ="'.base_url('admin/shipmentfrequency').'/status/deactivate/'.$row->freqShipmentId.'" type="submit" name="delete" id="'.$row->freqShipmentId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else
@@ -91,7 +92,7 @@ class Country extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/country').'/edit/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->freqShipmentId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -100,7 +101,7 @@ class Country extends CI_Controller
 
 				if(isset($this->permission['delete']))
 				{
-					$delete = '<a href ="'.base_url('admin/country').'/delete/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+					$delete = '<a href ="'.base_url('admin/shipmentfrequency').'/delete/'.$row->freqShipmentId.'" type="submit" name="edit" id="'.$row->freqShipmentId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
 				else
 				{
@@ -113,65 +114,61 @@ class Country extends CI_Controller
 			{
 				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
 			}
-			
+
 			$data[] = $sub_array;  
 			$i++;
 
 		}  
 		$output = array(  
 			"draw"                  =>     intval($_POST["draw"]),  
-			"recordsTotal"          =>     $this->Country_Model->get_all_data(),  
-			"recordsFiltered"     	=>     $this->Country_Model->get_filtered_data(),  
+			"recordsTotal"          =>     $this->ShipmentFrequency_Model->get_all_data(),  
+			"recordsFiltered"     	=>     $this->ShipmentFrequency_Model->get_filtered_data(),  
 			"data"                  =>     $data  
 			);  
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/country/form','','admin');
-	}
-
-	function save()
-	{
-		$this->Country_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->ShipmentFrequency_Model->save();
+		}
+		else
+		{
+			$this->ShipmentFrequency_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
 
 
 	function status()
 	{
-		$this->Country_Model->status();
+		$this->ShipmentFrequency_Model->status();
 		header("Location:".$this->page);
 
-	}
-
-	function edit()
-	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['country'] = $this->Country_Model->get();
-
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/country/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->Country_Model->update();
-		header("Location:".$this->page);
 	}
 
 	function delete()
 	{
-		$this->Country_Model->delete();
+		$this->ShipmentFrequency_Model->delete();
 		header("Location:".$this->page);
+	}
+
+
+	function getsingle()
+	{
+		$data = $this->ShipmentFrequency_Model->get($this->input->post("id"));
+
+		$output['freqShipmentName'] = $data->freqShipmentName;
+		echo json_encode($output);
 	}
 
 
 	function checkCode()
 	{
-		$data = $this->Country_Model->checkCode();
+		$data = $this->Airport_Model->checkCode();
 
 		if($data)
 		{
@@ -183,6 +180,5 @@ class Country extends CI_Controller
 		}
 
 	}
-
 
 } ?>

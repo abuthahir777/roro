@@ -1,5 +1,5 @@
 <?php
-class Users extends CI_Controller 
+class Customer extends CI_Controller 
 {
 	public function __construct()
 	{
@@ -8,11 +8,12 @@ class Users extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->model(array('User_Model','Country_Model','City_Model'));
+		$this->load->model(array('Customer_Model','User_Model','Country_Model','State_Model','City_Model','BusinessType_Model','ShipmentFrequency_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."users";
+		$this->page = $this->config->item("base_url_admin")."customer";
 
-		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),10);
+		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),11);
+		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -30,32 +31,34 @@ class Users extends CI_Controller
 
 	function index()
 	{
+
 		if(isset($this->permission['create']))
 		{
 			$data['create'] = "create";
 		}
 		else{ $data = ""; }
 
-		$this->layouts->title('State Table');
-		$this->layouts->view('pages/admin/users/table',$data,'admin');
+		$this->layouts->title('Customer Table');
+		$this->layouts->view('pages/admin/customer/table',$data,'admin');
 	}
 
 	function fetch()
 	{
 
-		$fetch_data = $this->User_Model->fetch_dataUser();  
+		$fetch_data = $this->Customer_Model->fetch_data();  
 		$data = array();  
 		$i=1;
 		foreach($fetch_data as $row)  
-		{  
+		{
 			$sub_array = array(); 
 			$sub_array[] = $i;   
-			$sub_array[] = $row->userCode;
-			$sub_array[] = $row->firstName;
-			$sub_array[] = $row->lastName;
-			$sub_array[] = $row->userEmail;
-			$sub_array[] = $row->userMobile;
-			$sub_array[] = $row->roleName;
+			$sub_array[] = $row->customerFname;
+			$sub_array[] = $row->customerLname;
+			$sub_array[] = $row->customerEmail;
+			$sub_array[] = $row->customerMobile;
+			$sub_array[] = $row->customerCompany;
+			$sub_array[] = $row->customerAddress;
+			$sub_array[] = $row->customerCountry;
 
 			if($row->active_status == 1)
 			{
@@ -81,11 +84,11 @@ class Users extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/users').'/status/activate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
+						$status = '<a href ="'.base_url('admin/customer').'/status/activate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/users').'/status/deactivate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
+						$status = '<a href ="'.base_url('admin/customer').'/status/deactivate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else
@@ -95,7 +98,7 @@ class Users extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/users').'/edit/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a href ="'.base_url('admin/customer').'/edit/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -104,7 +107,7 @@ class Users extends CI_Controller
 
 				if(isset($this->permission['delete']))
 				{
-					$delete = '<a href ="'.base_url('admin/users').'/delete/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+					$delete = '<a href ="'.base_url('admin/customer').'/delete/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
 				else
 				{
@@ -124,8 +127,8 @@ class Users extends CI_Controller
 		}  
 		$output = array(  
 			"draw"                  =>     intval($_POST["draw"]),  
-			"recordsTotal"          =>     $this->User_Model->get_all_dataUser(),  
-			"recordsFiltered"     	=>     $this->User_Model->get_filtered_dataUser(),  
+			"recordsTotal"          =>     $this->Customer_Model->get_all_data(),  
+			"recordsFiltered"     	=>     $this->Customer_Model->get_filtered_data(),  
 			"data"                  =>     $data  
 			);  
 		echo json_encode($output);
@@ -133,15 +136,27 @@ class Users extends CI_Controller
 
 	function add()
 	{
-		$data['roles'] = $this->User_Model->getRoles();
+		$data['country'] = $this->Country_Model->getall();
+		$data['businessType'] = $this->BusinessType_Model->getall();
+		$data['shipmentFreq'] = $this->ShipmentFrequency_Model->getall();
 
 		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/users/form',$data,'admin');
+		$this->layouts->view('pages/admin/customer/form',$data,'admin');
 	}
 
 	function save()
 	{
-		$this->User_Model->saveUser();
+		$config['allowed_types'] = 'doc|docx|pdf|jpeg|png';
+		$config['upload_path'] = './forms/IDProof';
+		$config['file_name'] = $this->input->post('fname')."_".$this->input->post('lname')."_".$this->input->post('cname');
+
+		$this->load->library('upload',$config);
+
+		if($this->upload->do_upload('fileupload'))
+		{
+			$this->Customer_Model->save();
+		}
+		
 		header("Location:".$this->page);
 	}
 
@@ -190,7 +205,25 @@ class Users extends CI_Controller
 		}
 		else
 		{
-			echo '<option value="">No States Entered</option>';
+			echo '<option value="">No State</option>';
+		}
+	}
+
+	function fetchCity()
+	{
+		$cities = $this->City_Model->getSpecific();
+
+		if($cities)
+		{
+			echo '<option value="">Select City</option>';
+			foreach($cities as $row)
+			{
+				echo '<option value="'.$row->cityId.'">'.$row->cityName.'</option>';
+			}
+		}
+		else
+		{
+			echo '<option value="">No City</option>';
 		}
 	}
 

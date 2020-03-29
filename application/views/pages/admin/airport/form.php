@@ -99,7 +99,7 @@
                   </div>
                   <div class="col-md-6">
                     <input type="text" class="form-control" id="airport" name="airport" placeholder="Enter Airport Name">
-                    <span id="airport-info" class="error-content err-font-color"></span>
+                    <small id="airport-info" class="text-danger"></small>
                   </div>
                 </div>
               </div>

@@ -244,14 +244,13 @@
               </li>
               <li class="nav-item">
                   <a href="#" class="nav-link">
-                    <i class="mdi mdi-codepen menu-icon"></i>
-                    <span class="menu-title">Sample Pages</span>
+                    <i class="mdi mdi-walk menu-icon"></i>
+                    <span class="menu-title">Customers</span>
                     <i class="menu-arrow"></i>
                   </a>
                   <div class="submenu">
                       <ul class="submenu-item">
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('assets/admin');?>/">Page</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('assets/admin');?>/">Page</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin/customer');?>">Customers</a></li>
                       </ul>
                   </div>
               </li>
@@ -284,6 +283,8 @@
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li>
                           <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/business-type">Business Types</a></li>
+                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/frequency-of-shipment">Frequency of Shipment</a></li>
                       </ul>
                   </div>
               </li>

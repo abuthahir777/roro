@@ -70,11 +70,11 @@ class State extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/state').'/status/activate/'.$row->stateId.'" type="submit" name="delete" id="'.$row->stateId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+						$status = '<a href ="'.base_url('admin/state').'/status/activate/'.$row->stateId.'" type="submit" name="delete" id="'.$row->stateId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/state').'/status/deactivate/'.$row->stateId.'" type="submit" name="delete" id="'.$row->stateId.'" class="update" ><i class="fa fa-check"></i></a>';
+						$status = '<a href ="'.base_url('admin/state').'/status/deactivate/'.$row->stateId.'" type="submit" name="delete" id="'.$row->stateId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else

@@ -55,3 +55,8 @@ $route['default_controller'] = '';
 $route['admin'] = 'admin/login';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
+
+/*---------------------- CUSTOM ---------------------------------*/
+
+$route['admin/business-type'] = 'admin/businesstype';
+$route['admin/frequency-of-shipment'] = 'admin/ShipmentFrequency';

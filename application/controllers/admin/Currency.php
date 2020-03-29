@@ -78,11 +78,11 @@ class Currency extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/currency').'/status/activate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+						$status = '<a href ="'.base_url('admin/currency').'/status/activate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/currency').'/status/deactivate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-check"></i></a>';
+						$status = '<a href ="'.base_url('admin/currency').'/status/deactivate/'.$row->currencyId.'" type="submit" name="delete" id="'.$row->currencyId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else

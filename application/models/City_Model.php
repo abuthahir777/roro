@@ -101,6 +101,16 @@ class City_Model extends CI_Model
                     ->row();
     }
 
+    function getSpecific()
+    {
+        return $this->db->where('countryId',$this->input->post('countryId'))
+                        ->where('stateId',$this->input->post('stateId'))
+                        ->where('active_status',0)
+                        ->where('delete_status',0)
+                        ->get('city')
+                        ->result();
+    }
+
 
     function update()
     {

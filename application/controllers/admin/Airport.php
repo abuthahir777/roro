@@ -23,7 +23,8 @@ class Airport extends CI_Controller
 			header("Location:".$this->config->item("base_url_admin"));
 		}
 
-		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
+		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
+		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
 	
 	}
 
@@ -31,7 +32,7 @@ class Airport extends CI_Controller
 	function index()
 	{
 
-		if(isset($permission['create']))
+		if(isset($this->permission['create']))
 		{
 			$data['create'] = "Create";
 		}
@@ -83,11 +84,11 @@ class Airport extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/airport').'/status/activate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check"></i></a>';
+						$status = '<a href ="'.base_url('admin/airport').'/status/activate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/airport').'/status/deactivate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-check"></i></a>';
+						$status = '<a href ="'.base_url('admin/airport').'/status/deactivate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else

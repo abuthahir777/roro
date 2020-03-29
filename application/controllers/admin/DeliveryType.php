@@ -77,11 +77,11 @@ class DeliveryType extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/deliverytype').'/status/activate/'.$row->deliveryTypeId.'" type="submit" name="delete" id="'.$row->deliveryTypeId.'" class="update" ><i class="fa fa-check-square"></i></a>';
+						$status = '<a href ="'.base_url('admin/deliverytype').'/status/activate/'.$row->deliveryTypeId.'" type="submit" name="delete" id="'.$row->deliveryTypeId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/deliverytype').'/status/deactivate/'.$row->deliveryTypeId.'" type="submit" name="delete" id="'.$row->deliveryTypeId.'" class="update" ><i class="fa fa-check"></i></a>';
+						$status = '<a href ="'.base_url('admin/deliverytype').'/status/deactivate/'.$row->deliveryTypeId.'" type="submit" name="delete" id="'.$row->deliveryTypeId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else
