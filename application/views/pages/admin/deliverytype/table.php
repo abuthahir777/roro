@@ -8,10 +8,10 @@
 
         <div class="col-md-6" align="center"></div>
 
-<!--         <div class="col-md-2" align="right">  
-          <a href="<?php echo base_url('admin/currency/add');?>">
+<!--         <div class="col-md-2" align="right">
+          <?php if(isset($create)){?>
               <input type="submit" name="add" id="add" value="Add" class="btn btn-primary">
-          </a>
+          <?php } ?>
         </div> -->
 
       </div>

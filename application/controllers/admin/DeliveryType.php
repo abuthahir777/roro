@@ -32,9 +32,8 @@ class DeliveryType extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "create";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
 		$this->layouts->title('Delivery Types Table');
 		$this->layouts->view('pages/admin/deliverytype/table',$data,'admin');

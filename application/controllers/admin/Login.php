@@ -38,7 +38,14 @@ class Login extends CI_Controller
 				$userdata = array('fname'=>$data->firstName,'lname'=>$data->lastName,'userId'=>$data->userCode,'email'=>$data->userEmail,'mobile'=>$data->userMobile,'roleId'=>$data->roleId,'loggedin'=> TRUE);
 				$this->session->set_userdata($userdata);
 
-				header("Location:". $this->page."/country");
+				$tables = $this->User_Model->getViewPermissions($data->roleId);
+
+				foreach($tables as $table)
+				{
+					$this->session->set_userdata($table->tableName,$table->tableName);
+				}
+
+				header("Location:". $this->page."/role");
 			}
 			else
 			{
@@ -57,6 +64,13 @@ class Login extends CI_Controller
 
 	public function logout()
 	{
+			$tables = $this->User_Model->getallTable();
+
+			foreach($tables as $table)
+			{
+				$this->session->unset_userdata($table->tableName);
+			}
+
 			$this->session->unset_userdata('fname');
 			$this->session->unset_userdata('lname');
 			$this->session->unset_userdata('userId');

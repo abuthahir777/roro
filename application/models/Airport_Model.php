@@ -91,12 +91,12 @@ class Airport_Model extends CI_Model
         }
     }
 
-    function get()
+    function get($id)
     {
         return $this->db->from('airport')
                     ->join('country','country.countryId = airport.countryId')
                     ->join('state','state.stateId = airport.stateId')
-                    ->where('airport.airportId',$this->uri->segment(4))
+                    ->where('airport.airportId',$id)
                     ->get()
                     ->row();
     }
@@ -104,7 +104,7 @@ class Airport_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('airportId',$this->input->post('id'))
+        $this->db->where('airportId',$this->input->post('airportId'))
                 ->update('airport',[
                     'airportCode'=>strtoupper($this->input->post('code')),
                     'airportName'=>ucwords($this->input->post('airport')),

@@ -32,10 +32,10 @@ class Port extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "create";
-		}
-		else{ $data = ""; }
-
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
+		
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/port/table',$data,'admin');
 	}
@@ -94,7 +94,7 @@ class Port extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/port').'/edit/'.$row->portId.'" type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -130,18 +130,17 @@ class Port extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['country'] = $this->Country_Model->getall();
-		$data['state'] = $this->State_Model->getall();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/port/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->Port_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->Port_Model->save();
+		}
+		else
+		{
+			$this->Port_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
 
@@ -153,21 +152,15 @@ class Port extends CI_Controller
 
 	}
 
-	function edit()
+	function getbyID()
 	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['port'] = $this->Port_Model->get();
-		$data['states'] = $this->State_Model->getall();
-		$data['countries'] = $this->Country_Model->getall();
+		$data = $this->Port_Model->get($this->input->post("id"));
 
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/port/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->Port_Model->update();
-		header("Location:".$this->page);
+		$output['country'] = $data->countryId;
+		$output['state'] = $data->stateId;
+		$output['code'] = $data->portCode;
+		$output['port'] = $data->portName;
+		echo json_encode($output);
 	}
 
 	function delete()
@@ -176,23 +169,19 @@ class Port extends CI_Controller
 		header("Location:".$this->page);
 	}
 
-
-	function fetchState()
+	function checkCode()
 	{
-		$states = $this->State_Model->getSpecific();
+		$data = $this->Port_Model->checkCode();
 
-		if($states)
+		if($data)
 		{
-			echo '<option value="">Select State</option>';
-			foreach($states as $row)
-			{
-				echo '<option value="'.$row->stateId.'">'.$row->stateName.'</option>';
-			}
+			echo "Already Exists";
 		}
 		else
 		{
-			echo '<option value="">No States Entered</option>';
+			echo "";
 		}
+
 	}
 
 

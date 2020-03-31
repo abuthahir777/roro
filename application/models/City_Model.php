@@ -91,12 +91,12 @@ class City_Model extends CI_Model
         }
     }
 
-    function get()
+    function get($id)
     {
         return $this->db->from('city')
                     ->join('country','country.countryId = city.countryId')
                     ->join('state','state.stateId = city.stateId')
-                    ->where('city.cityId',$this->uri->segment(4))
+                    ->where('city.cityId',$id)
                     ->get()
                     ->row();
     }
@@ -114,7 +114,7 @@ class City_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('cityId',$this->input->post('id'))
+        $this->db->where('cityId',$this->input->post('cityId'))
                 ->update('city',[
                     'cityCode'=>strtoupper($this->input->post('code')),
                     'cityName'=>ucwords($this->input->post('city')),

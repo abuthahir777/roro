@@ -32,10 +32,10 @@ class Country extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "create";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('Applications');
 		$this->layouts->view('pages/admin/country/table',$data,'admin');
 	}
@@ -91,7 +91,7 @@ class Country extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/country').'/edit/'.$row->countryId.'" type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->countryId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -127,15 +127,17 @@ class Country extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/country/form','','admin');
-	}
-
-	function save()
-	{
-		$this->Country_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->Country_Model->save();
+		}
+		else
+		{
+			$this->Country_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
 
@@ -147,19 +149,13 @@ class Country extends CI_Controller
 
 	}
 
-	function edit()
+	function getbyID()
 	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['country'] = $this->Country_Model->get();
+		$data = $this->Country_Model->get($this->input->post("id"));
 
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/country/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->Country_Model->update();
-		header("Location:".$this->page);
+		$output['country'] = $data->countryName;
+		$output['code'] = $data->countryCode;
+		echo json_encode($output);
 	}
 
 	function delete()

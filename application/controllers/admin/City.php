@@ -32,9 +32,10 @@ class City extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "Create";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
+		
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/city/table',$data,'admin');
 	}
@@ -92,7 +93,7 @@ class City extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/city').'/edit/'.$row->cityId.'" type="submit" name="edit" id="'.$row->cityId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->cityId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -129,21 +130,19 @@ class City extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['country'] = $this->Country_Model->getall();
-		$data['state'] = $this->State_Model->getall();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/city/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->City_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->City_Model->save();
+		}
+		else
+		{
+			$this->City_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
-
 
 	function status()
 	{
@@ -152,48 +151,22 @@ class City extends CI_Controller
 
 	}
 
-	function edit()
-	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['city'] = $this->City_Model->get();
-		$data['states'] = $this->State_Model->getall();
-		$data['countries'] = $this->Country_Model->getall();
-
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/city/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->City_Model->update();
-		header("Location:".$this->page);
-	}
-
 	function delete()
 	{
 		$this->City_Model->delete();
 		header("Location:".$this->page);
 	}
 
-
-	function fetchState()
+	function getbyID()
 	{
-		$states = $this->State_Model->getSpecific();
+		$data = $this->City_Model->get($this->input->post("id"));
 
-		if($states)
-		{
-			echo '<option value="">Select State</option>';
-			foreach($states as $row)
-			{
-				echo '<option value="'.$row->stateId.'">'.$row->stateName.'</option>';
-			}
-		}
-		else
-		{
-			echo '<option value="">No States Entered</option>';
-		}
+		$output['country'] = $data->countryId;
+		$output['state'] = $data->stateId;
+		$output['code'] = $data->cityName;
+		$output['city'] = $data->cityCode;
+		echo json_encode($output);
 	}
-
 
 	function checkCode()
 	{

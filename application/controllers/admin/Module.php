@@ -36,6 +36,9 @@ class Module extends CI_Controller
 		}
 		else{ $data = ""; }
 
+		$data['tables'] = $this->User_Model->getallTable();
+		$data['operations'] = $this->User_Model->getallOperation();
+
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/module/table',$data,'admin');
 	}
@@ -92,7 +95,7 @@ class Module extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/module').'/edit/'.$row->moduleId.'" type="submit" name="edit" id="'.$row->moduleId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->moduleId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -128,21 +131,19 @@ class Module extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['tables'] = $this->User_Model->getallTable();
-		$data['operations'] = $this->User_Model->getallOperation();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/module/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->User_Model->saveModule();
+		if($this->input->post('action')=="save")
+		{
+			$this->User_Model->saveModule();
+		}
+		else
+		{
+			$this->User_Model->updateModule();
+		}
+		
 		header("Location:".$this->page);
 	}
-
 
 	function status()
 	{
@@ -151,27 +152,48 @@ class Module extends CI_Controller
 
 	}
 
-	function edit()
+	function getsingle()
 	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['module'] = $this->User_Model->getModule('specific');
-		$data['tables'] = $this->User_Model->getallTable();
-		$data['operations'] = $this->User_Model->getallOperation();
+		$data = $this->User_Model->getModulebyID($this->input->post("id"));
 
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/module/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->User_Model->updateModule();
-		header("Location:".$this->page);
+		$output['table'] = $data->tableId;
+		$output['operation'] = $data->operationId;
+		$output['module'] = $data->moduleName;
+		echo json_encode($output);
 	}
 
 	function delete()
 	{
 		$this->User_Model->deleteModule();
 		header("Location:".$this->page);
+	}
+
+	function getTObyID()
+	{
+		$oid = $this->input->post('operaId');
+		$tid = $this->input->post('tableId');
+
+		if($oid !="" && $tid =="")
+		{
+			$opera = $this->User_Model->getOperation($oid);
+			$data['operaName'] = $opera->operationName;
+			$data['tableName']="";
+		}
+		elseif($oid =="" && $tid !="")
+		{
+			$table = $this->User_Model->getTable($tid);
+			$data['tableName'] = $table->tableName;
+			$data['operaName'] = "";
+		}
+		elseif($oid !="" && $tid !="")
+		{
+			$opera = $this->User_Model->getOperation($oid);
+			$table = $this->User_Model->getTable($tid);
+			$data['operaName'] = $opera->operationName;
+			$data['tableName'] = $table->tableName." - ";
+		}
+
+		echo json_encode($data);
 	}
 
 

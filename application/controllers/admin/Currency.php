@@ -29,12 +29,12 @@ class Currency extends CI_Controller
 
 	function index()
 	{
-		if(isset($this->permission['view']))
+		if(isset($this->permission['create']))
 		{
-			$data['view'] = "View";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/currency/table',$data,'admin');
 	}
@@ -92,7 +92,7 @@ class Currency extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/currency').'/edit/'.$row->currencyId.'" type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->currencyId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -128,20 +128,19 @@ class Currency extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['country'] = $this->Country_Model->getall();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/currency/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->Currency_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->Currency_Model->save();
+		}
+		else
+		{
+			$this->Currency_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
-
 
 	function status()
 	{
@@ -150,20 +149,14 @@ class Currency extends CI_Controller
 
 	}
 
-	function edit()
+	function getbyID()
 	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['currency'] = $this->Currency_Model->get();
-		$data['countries'] = $this->Country_Model->getall();
+		$data = $this->Currency_Model->get($this->input->post("id"));
 
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/currency/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->Currency_Model->update();
-		header("Location:".$this->page);
+		$output['country'] = $data->countryId;
+		$output['currency'] = $data->currencyName;
+		$output['code'] = $data->currencyCode;
+		echo json_encode($output);
 	}
 
 	function delete()

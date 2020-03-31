@@ -88,10 +88,10 @@ class State_Model extends CI_Model
         }
     }
 
-    function get()
+    function get($id)
     {
         return $this->db->from('state')
-                    ->where('state.stateId',$this->uri->segment(4))
+                    ->where('state.stateId',$id)
                     ->join('country','country.countryId = state.countryId')
                     ->get()
                     ->row();
@@ -121,7 +121,7 @@ class State_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('stateId',$this->input->post('id'))
+        $this->db->where('stateId',$this->input->post('stateId'))
                 ->update('state',[
                     'stateCode'=>strtoupper($this->input->post('code')),
                     'stateName'=>ucwords($this->input->post('state')),

@@ -38,8 +38,26 @@ class User_Model extends CI_Model
         return $this->db->from('tables')
                     ->where('active_status',0)
                     ->where('delete_status',0)
+                    ->order_by('tableName','ASC')
                     ->get()
                     ->result();
+    }
+
+    function getTable($id)
+    {
+        return $this->db->from('tables')  
+                        ->where('tableId',$id)
+                        ->get()
+                        ->row();
+
+    }
+
+    function getOperation($id)
+    {
+        return $this->db->from('operations')  
+                        ->where('operationId',$id)
+                        ->get()
+                        ->row();
     }
 
 //------------------------------------------------- MODULE AREA START -------------------------------------------------------------------------------
@@ -103,7 +121,7 @@ class User_Model extends CI_Model
     function saveModule()
     {
         $this->db->insert('module',[
-            'moduleName' => ucwords($this->input->post('modulename')),
+            'moduleName' => ucwords($this->input->post('module')),
             'tableId' => $this->input->post('table'),
             'operationId' => $this->input->post('operation'),
             'active_status' => 0,
@@ -129,28 +147,26 @@ class User_Model extends CI_Model
 
     function getModule($action)
     {
-        $this->db->from('module');
-        if($action == 'specific')
-        {
-            $this->db->where('moduleId',$this->uri->segment(4));
-        }
-        $data = $this->db->get();
+        return $this->db->from('module')
+                        ->order_by('moduleName','ASC')
+                        ->get()
+                        ->result();
 
-        if($action == 'specific')
-        {
-            return $data->row();
-        }
-        else
-        {
-            return $data->result();
-        }
+    }
+
+    function getModulebyID($id)
+    {
+        return $this->db->from('module')
+                    ->where('moduleId',$id)
+                    ->get()
+                    ->row();
     }
 
     function updateModule()
     {
-        $this->db->where('moduleId',$this->input->post('id'))
+        $this->db->where('moduleId',$this->input->post('moduleId'))
                 ->update('module',[
-                    'moduleName'=>ucwords($this->input->post('modulename')),
+                    'moduleName'=>ucwords($this->input->post('module')),
                     'tableId'=>$this->input->post('table'),
                     'operationId'=>$this->input->post('operation')
             ]);
@@ -470,6 +486,22 @@ class User_Model extends CI_Model
                 ->group_start()
                 ->where('role.roleId',$roleId)
                 ->where('module.tableId',$tableId)
+                ->where('module.active_status',0)
+                ->where('module.delete_status',0)
+                ->group_end()
+                ->get()
+                ->result();
+    }
+
+    function getViewPermissions($roleId)
+    {
+        return $this->db->from('role')
+                ->join('accessrights','role.roleId = accessrights.roleId')
+                ->join('module','module.moduleId = accessrights.moduleId')
+                ->join('tables','tables.tableId = module.tableId')
+                ->group_start()
+                ->where('role.roleId',$roleId)
+                ->where('module.operationId',1)
                 ->where('module.active_status',0)
                 ->where('module.delete_status',0)
                 ->group_end()

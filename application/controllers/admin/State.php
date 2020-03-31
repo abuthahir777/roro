@@ -32,10 +32,10 @@ class State extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "create";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/state/table',$data,'admin');
 	}
@@ -84,7 +84,7 @@ class State extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/state').'/edit/'.$row->stateId.'" type="submit" name="edit" id="'.$row->stateId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->stateId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -120,20 +120,19 @@ class State extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['country'] = $this->Country_Model->getall();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/state/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->State_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->State_Model->save();
+		}
+		else
+		{
+			$this->State_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
-
 
 	function status()
 	{
@@ -142,22 +141,32 @@ class State extends CI_Controller
 
 	}
 
-	function edit()
+	function fetchState()
 	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['state'] = $this->State_Model->get();
-		$data['countrys'] = $this->Country_Model->getall();
+		$states = $this->State_Model->getSpecific();
 
-		// echo '<pre>'; print_r($data); echo '</pre>';exit();
-
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/state/form',$data,'admin');
+		if($states)
+		{
+			echo '<option value="">Select State</option>';
+			foreach($states as $row)
+			{
+				echo '<option value="'.$row->stateId.'">'.$row->stateName.'</option>';
+			}
+		}
+		else
+		{
+			echo '<option value="">No States Entered</option>';
+		}
 	}
 
-	function update()
+	function getbyID()
 	{
-		$this->State_Model->update();
-		header("Location:".$this->page);
+		$data = $this->State_Model->get($this->input->post("id"));
+
+		$output['country'] = $data->countryId;
+		$output['state'] = $data->stateName;
+		$output['code'] = $data->stateCode;
+		echo json_encode($output);
 	}
 
 	function delete()

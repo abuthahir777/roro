@@ -93,9 +93,9 @@ class Country_Model extends CI_Model
                     ->result();
     }
 
-    function get()
+    function get($id)
     {
-        return $this->db->where('countryId',$this->uri->segment(4))
+        return $this->db->where('countryId',$id)
                     ->get('country')
                     ->row();
     }
@@ -103,7 +103,7 @@ class Country_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('countryId',$this->input->post('id'))
+        $this->db->where('countryId',$this->input->post('countryId'))
                 ->update('country',[
                     'countryCode'=>strtoupper($this->input->post('code')),
                     'countryName'=>ucwords($this->input->post('country'))

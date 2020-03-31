@@ -13,7 +13,6 @@ class BusinessType extends CI_Controller
 		$this->page = $this->config->item("base_url_admin")."business-type";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
-		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -31,13 +30,10 @@ class BusinessType extends CI_Controller
 
 	function index()
 	{
-		// if(isset($this->permission['create']))
-		// {
-		// 	$data['create'] = "create";
-		// }
-		// else{ $data = ""; }
-
-		$data['create'] = "create";
+		if(isset($this->permission['create']))
+		{
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
 		$this->layouts->title('Delivery Types Table');
 		$this->layouts->view('pages/admin/businesstype/table',$data,'admin');

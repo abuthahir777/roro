@@ -23,23 +23,19 @@ class Airport extends CI_Controller
 			header("Location:".$this->config->item("base_url_admin"));
 		}
 
-		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
-		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
 	
 	}
 
 
 	function index()
 	{
-
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "Create";
-		}
-		else
-		{
-			$data = "";
-		}
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
+
+		$data['country'] = $this->Country_Model->getall();
 		$this->layouts->title('State Table');
 		$this->layouts->view('pages/admin/airport/table',$data,'admin');
 	}
@@ -98,7 +94,7 @@ class Airport extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/airport').'/edit/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -135,21 +131,19 @@ class Airport extends CI_Controller
 		echo json_encode($output);
 	}
 
-	function add()
+	function action()
 	{
-		$data['country'] = $this->Country_Model->getall();
-		$data['state'] = $this->State_Model->getall();
-
-		$this->layouts->title('Add');
-		$this->layouts->view('pages/admin/airport/form',$data,'admin');
-	}
-
-	function save()
-	{
-		$this->Airport_Model->save();
+		if($this->input->post('action')=="save")
+		{
+			$this->Airport_Model->save();
+		}
+		else
+		{
+			$this->Airport_Model->update();
+		}
+		
 		header("Location:".$this->page);
 	}
-
 
 	function status()
 	{
@@ -158,27 +152,21 @@ class Airport extends CI_Controller
 
 	}
 
-	function edit()
-	{
-		$data['edit'] = $this->uri->segment(3);
-		$data['airport'] = $this->Airport_Model->get();
-		$data['states'] = $this->State_Model->getall();
-		$data['countries'] = $this->Country_Model->getall();
-
-		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/airport/form',$data,'admin');
-	}
-
-	function update()
-	{
-		$this->Airport_Model->update();
-		header("Location:".$this->page);
-	}
-
 	function delete()
 	{
 		$this->Airport_Model->delete();
 		header("Location:".$this->page);
+	}
+
+	function getsingle()
+	{
+		$data = $this->Airport_Model->get($this->input->post("id"));
+
+		$output['country'] = $data->countryId;
+		$output['state'] = $data->stateId;
+		$output['code'] = $data->airportCode;
+		$output['airport'] = $data->airportName;
+		echo json_encode($output);
 	}
 
 

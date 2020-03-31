@@ -12,8 +12,8 @@ class ShipmentFrequency extends CI_Controller
 
 		$this->page = $this->config->item("base_url_admin")."frequency-of-shipment";
 
-		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
-		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
+		
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -33,9 +33,8 @@ class ShipmentFrequency extends CI_Controller
 	{
 		if(isset($this->permission['create']))
 		{
-			$data['create'] = "create";
-		}
-		else{ $data = ""; }
+			$data['create'] = "Create";			
+		}else{$data['NULL'] = "";}
 
 		$this->layouts->title('Shipment Frequency');
 		$this->layouts->view('pages/admin/shipmentfrequency/table',$data,'admin');

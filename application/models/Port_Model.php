@@ -91,12 +91,12 @@ class Port_Model extends CI_Model
         }
     }
 
-    function get()
+    function get($id)
     {
         return $this->db->from('port')
                     ->join('country','country.countryId = port.countryid')
                     ->join('state','state.stateId = port.stateId')
-                    ->where('port.portId',$this->uri->segment(4))
+                    ->where('port.portId',$id)
                     ->get()
                     ->row();
     }
@@ -104,7 +104,7 @@ class Port_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('portId',$this->input->post('id'))
+        $this->db->where('portId',$this->input->post('portId'))
                 ->update('port',[
                     'portCode'=>strtoupper($this->input->post('code')),
                     'portName'=>ucwords($this->input->post('port')),

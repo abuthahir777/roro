@@ -88,10 +88,10 @@ class Currency_Model extends CI_Model
         }
     }
 
-    function get()
+    function get($id)
     {
         return $this->db->from('currency')
-                    ->where('currency.currencyId',$this->uri->segment(4))
+                    ->where('currency.currencyId',$id)
                     ->join('country','country.countryId = currency.countryId')
                     ->get()
                     ->row();
@@ -121,7 +121,7 @@ class Currency_Model extends CI_Model
 
     function update()
     {
-        $this->db->where('currencyId',$this->input->post('id'))
+        $this->db->where('currencyId',$this->input->post('currencyId'))
                 ->update('currency',['currencyCode'=>strtoupper($this->input->post('code')),
                     'currencyName'=>ucwords($this->input->post('currency')),
                     'countryid'=>$this->input->post('country')

@@ -276,15 +276,24 @@
                   </a>
                   <div class="submenu">
                       <ul class="submenu-item">
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/country">Countries</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/state">State</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/city">City</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/port">Ports</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/business-type">Business Types</a></li>
-                          <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/frequency-of-shipment">Frequency of Shipment</a></li>
+                          <?php if($this->session->userdata('Country') != ''){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/country">Countries</a></li><?php }?>
+                          <?php if($this->session->userdata("State") == "State"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/state">State</a></li><?php }?>
+                          <?php if($this->session->userdata("City") == "City"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/city">City</a></li><?php }?>
+                          <?php if($this->session->userdata("Port") == "Port"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/port">Ports</a></li><?php }?>
+                          <?php if($this->session->userdata("Airport") == "Airport"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li><?php }?>
+                          <?php if($this->session->userdata("Curriency") == "Curriency"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li><?php }?>
+                          <?php if($this->session->userdata("Delivery Type") == "Delivery Type"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li><?php }?>
+                          <?php if($this->session->userdata("Business Type") == "Business Type"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/business-type">Business Types</a></li><?php }?>
+                          <?php if($this->session->userdata("Shipment Frequency") == "Shipment Frequency"){?>
+                            <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/frequency-of-shipment">Frequency of Shipment</a></li><?php }?>
                       </ul>
                   </div>
               </li>
@@ -297,19 +306,20 @@
      <?php echo $content; ?>
 
 
-    <footer class="footer">
-          <div class="footer-wrap">
-              <div class="w-100 clearfix">
-                <span class="d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018 <a href="https://www.templatewatch.com/" target="_blank">Chartering Roro</a>. All rights reserved.</span>
-                <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart-outline"></i></span>
-              </div>
-          </div>
-        </footer>
+    
         <!-- partial -->
       </div>
       <!-- main-panel ends -->
     </div>
     <!-- page-body-wrapper ends -->
+    <footer class="footer">
+      <div class="footer-wrap">
+          <div class="w-100 clearfix">
+            <span class="d-block text-center text-sm-left d-sm-inline-block">Copyright © 2018 <a href="https://www.templatewatch.com/" target="_blank">Chartering Roro</a>. All rights reserved.</span>
+            <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="mdi mdi-heart-outline"></i></span>
+          </div>
+      </div>
+    </footer>
     </div>
     <!-- container-scroller -->
     <!-- base:js -->

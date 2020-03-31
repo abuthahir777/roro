@@ -4,14 +4,14 @@
       <div class="row">
 
         <div class="col-md-4">
-          <h1>Business Type</h1>
+          <h2>Business Type</h2>
         </div>
 
         <div class="col-md-6" align="center"></div>
 
         <div class="col-md-2" align="right">
           <?php if(isset($create)){ ?>        
-              <input type="submit" name="add" id="add" value="Add" class="btn btn-primary">
+              <h2><input type="submit" name="add" id="add" value="Add" class="btn btn-primary"></h2>
           <?php } ?>
         </div>
 

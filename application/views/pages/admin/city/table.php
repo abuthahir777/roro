@@ -3,7 +3,7 @@
       <div class="row">
 
         <div class="col-md-6">
-          <h1>Cities</h1>
+          <h2>Cities</h2>
         </div>
 
         <div class="col-md-6">
@@ -11,7 +11,7 @@
             <div class="col-md-4"></div>
             <div class="col-md-3" align="right">
               <?php if(isset($create)) {?>
-              <h1><a type="button" name="add" id="add" value="Add" class="btn btn-primary" href="<?php echo base_url('admin/city/add');?>">Add</a></h1>
+                <h2><input type="submit" name="add" id="add" value="Add" class="btn btn-primary"></h2>
               <?php } ?>
             </div>
             <div class="col-md-3">
@@ -25,7 +25,7 @@
               </form>
             </div>
             <div class="col-md-1" align="right">
-              <h1><a class="btn btn-primary form-control" type="submit" name="download" id="download" href="<?php echo base_url('admin/state/download');?>"><i class="mdi mdi-download"></i></a></h1>
+              <h2><a class="btn btn-primary form-control" type="submit" name="download" id="download" href="<?php echo base_url('admin/state/download');?>"><i class="mdi mdi-download"></i></a></h2>
             </div>
           </div>
         </div>
@@ -56,9 +56,159 @@
 </div>
 
 
+<div class="modal fade" id="mymodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form action="<?php echo base_url('admin/city/action')?>" method="POST" id="myform" onsubmit="return validate()">
+      <div class="modal-body">
+          <div class="form-group">
+            <label>Country</label>
+            <select id="country" name="country" class="form-control">
+              <option value="">Select Country</option>
+              <?php foreach($country as $row){ ?>
+                <option value="<?php echo $row->countryId;?>"><?php echo $row->countryName;?></option>
+              <?php } ?>
+            </select>
+            <input type="hidden" class="form-control" name="action" id="action">
+            <input type="hidden" class="form-control" name="cityId" id="cityId">
+            <small id="country-info" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label>State</label>
+            <select id="state" name="state" class="form-control">
+              <option value="">Select State</option>
+            </select>
+            <small id="state-info" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label>City Code</label>
+            <input type="text" class="form-control" name="code" id="code" placeholder="Enter City Code">
+            <small id="code-info" class="text-danger"></small>
+            <small id="code-avl" class="text-danger"></small>
+          </div>
+          <div class="form-group">
+            <label>City Name</label>
+            <input type="text" class="form-control" name="city" id="city" placeholder="Enter City Name">
+            <small id="city-info" class="text-danger"></small>
+          </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" name="save" class="btn btn-primary" id="save">Save</button>
+      </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/javascript">
   $(document).ready(function()
   {
+
+    $('#add').click(function()
+        {
+          $('#mymodal').modal('show');
+          $("#country-info").html("");
+          $("#state-info").html("");
+          $("#code-info").html("");
+          $("#city-info").html("");
+          $('#country').val('');
+          $('#state').val('');
+          $('#code').val('');
+          $('#city').val('');
+          $('#cityId').val('');
+          $('#action').val('save');
+          $("#save").html("Save");
+        });
+
+        $(document).on('click','.edit', function(){
+
+          var id = $(this).attr("id");
+
+          $.ajax({
+
+            url: "<?php echo base_url('admin/city/getbyID');?>",
+            method: "POST",
+            data: { id:id },
+            dataType:"json",
+            success:function(data)
+            {
+                var statevalue = data.state;
+                $('#mymodal').modal('show');
+                $('#country').val(data.country);
+                $('#code').val(data.code);
+                $('#city').val(data.city);
+                $('#cityId').val(id);
+                $('#action').val('update');
+                $("#country-info").html("");
+                $("#state-info").html("");
+                $("#code-info").html("");
+                $("#city-info").html("");
+                $("#save").html("Update");
+
+                $.ajax({
+
+                  url: "<?php echo base_url('admin/state/fetchState');?>",
+                  method: "POST",
+                  data: {countryId:data.country},
+                  success:function(data)
+                  {
+                    $('#state').html(data);
+                    $('#state').val(statevalue);
+                  }
+                });
+
+            }
+          });
+        });
+
+
+        $('#country').change(function()
+        {
+          var countryId = $('#country').val();
+          
+          if(countryId!='')
+          {
+            $.ajax({
+
+              url: "<?php echo base_url('admin/state/fetchState');?>",
+              method: "POST",
+              data: {countryId:countryId},
+              success:function(data)
+              {
+                $('#state').html(data);
+              }
+            });
+          }
+        });
+
+
+        $('#code').keyup(function()
+        {
+            var code = $('#code').val();
+            var id = $('#cityId').val();
+            
+            if(code!='')
+            {
+              $.ajax({
+
+                url: "<?php echo base_url('admin/city/checkCode');?>",
+                method: "POST",
+                data: {code:code, id:id},
+                success:function(data)
+                {
+                  $('#code-info').html('');
+                  $('#code-avl').html(data);
+                }
+              });
+            }
+
+        });
+
+
     $('.hideit').fadeOut(10000);
 
         var dataTable = $('#citytable').DataTable({  
@@ -77,16 +227,38 @@
   function validate()
   {
       var valid = true;
+      if(!$("#state").val()){
+        $("#state-info").html("*State required.");
+        valid = false;
+      }else{
+          $("#state-info").html("");
+      }
 
-      var fileInput = $.trim($("#excelfile").val());
-      var ext = $('#excelfile').val().split('.').pop().toLowerCase();
-      if (fileInput && fileInput !== '') {   
-        if($.inArray(ext, ['xlsx']) == -1) {
-          $('#file-info').html('Attach xlsx file.');
-          valid = false;
-        }else{
-          $('#file-info').html('');
-        } 
+      if(!$("#country").val()){
+        $("#country-info").html("*Country required.");
+        valid = false;
+      }else{
+          $("#country-info").html("");
+      }
+
+      if(!$("#city").val()){
+        $("#city-info").html("*City required.");
+        valid = false;
+      }else{
+          $("#city-info").html("");
+      }
+
+      if(!$("#code").val()){
+        $("#code-info").html("*Code required.");
+        $('#code-avl').html("");
+        valid = false;
+      }else{
+          $("#code-info").html("");
+      }
+
+      if($("#code-avl").html() != ""){
+        $("#code-avl").html("Already Exists")
+        valid = false;
       }
 
       return valid;
