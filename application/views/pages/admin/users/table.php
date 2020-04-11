@@ -2,13 +2,37 @@
     <div class="card-header">
       <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <h1>Users</h1>
         </div>
 
-        <div class="col-md-6" align="center"></div>
+        <div class="col-md-6" align="center">
+            <?php
 
-        <div class="col-md-2" align="right">
+            if($this->session->flashdata('save'))
+            { ?>
+              <div class="alert alert-success hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('save'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('update'))
+            { ?>
+              <div class="alert alert-info hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('update'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('delete'))
+            { ?>
+              <div class="alert alert-danger hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('delete'); ?></h3>
+              </div>
+            <?php }
+            ?>     
+        </div>
+
+        <div class="col-md-3" align="right">
           <?php if(isset($create)){?>
           <a href="<?php echo base_url('admin/users/add');?>">
               <input type="submit" name="add" id="add" value="Add" class="btn btn-primary">
@@ -47,7 +71,7 @@
 <script type="text/javascript">
   $(document).ready(function()
   {
-    $('.hideit').fadeOut(10000);
+    $('.hideit').fadeOut(5000);
 
         var dataTable = $('#usertable').DataTable({  
              "processing":true,  

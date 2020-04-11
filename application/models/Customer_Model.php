@@ -29,14 +29,14 @@ class Customer_Model extends CI_Model
     }
 
     var $table = "customer";
-    var $select_column = array("customer.*","country.countryName");
+    var $select_column = array("customer.customerId","customer.customerFname","customer.customerLname","customer.customerEmail","customer.customerMobile","customer.customerCompany","customer.customerAddress","country.countryName","customer.active_status");
     var $order_column = array("","customer.customerFname","customer.customerLname","customer.customerEmail","customer.customerMobile","customer.customerCompany","customer.customerAddress","country.countryName", "customer.active_status", "");
 
     function make_query()
     {
         $this->db->select($this->select_column);
         $this->db->from($this->table);
-        $this->db->join("country","country.countryName = customer.customerCountry");
+        $this->db->join("country","country.countryId = customer.customerCountry");
         $this->db->where('customer.delete_status =',0);
 
         if(isset($_POST["search"]["value"]))
@@ -90,14 +90,14 @@ class Customer_Model extends CI_Model
 
     function status()
     {
-        $this->db->where('countryId',$this->uri->segment(5));
+        $this->db->where('customerId',$this->uri->segment(5));
         if($this->uri->segment(4)=="deactivate")
         {
-            $this->db->update('country',['active_status'=>1]);
+            $this->db->update('customer',['active_status'=>1]);
         }
         else
         {
-            $this->db->update('country',['active_status'=>0]);
+            $this->db->update('customer',['active_status'=>0]);
         }
     }
 
@@ -109,28 +109,38 @@ class Customer_Model extends CI_Model
                     ->result();
     }
 
-    function get()
+    function get($id)
     {
-        return $this->db->where('countryId',$this->uri->segment(4))
-                    ->get('country')
+        return $this->db->where('customerId',$id)
+                    ->get('customer')
                     ->row();
     }
 
 
     function update()
     {
-        $this->db->where('countryId',$this->input->post('id'))
-                ->update('country',[
-                    'countryCode'=>strtoupper($this->input->post('code')),
-                    'countryName'=>ucwords($this->input->post('country'))
-            ]);
+        $this->db->where('customerId',$this->input->post('id'))
+                ->update('customer',[
+                    'customerFname'=>ucwords($this->input->post('fname')),
+                    'customerLname'=>ucwords($this->input->post('lname')),
+                    'customerEmail'=>strtolower($this->input->post('email')),
+                    'customerMobile'=>$this->input->post('mobile'),
+                    'customerCity'=>$this->input->post('city'),
+                    'customerState'=>$this->input->post('state'),
+                    'customerCountry'=>$this->input->post('country'),
+                    'customerCompany'=>ucwords($this->input->post('cname')),
+                    'customerAddress'=>ucwords($this->input->post('caddress')),
+                    'customerBusinessType'=>$this->input->post('businesstype'),
+                    'customerShipmentFrequency'=>$this->input->post('shipmentFrequency')
+                ]);
+
     }
 
 
     function delete()
     {
-        $this->db->where('countryId',$this->uri->segment(4))
-                ->update('country',['delete_status'=>1
+        $this->db->where('customerId',$this->uri->segment(4))
+                ->update('customer',['delete_status'=>1
             ]);
     }
 
@@ -151,6 +161,27 @@ class Customer_Model extends CI_Model
             return false;
         }
     }
+
+
+    function checkCustomer()
+    {
+        $query = $this->db->where('customerId',$this->input->post('custId'))
+        ->where('customerPassword',md5($this->input->post('custPwd')))
+        ->get('customer');
+
+        if($query->num_rows() >0)
+        {
+            return $query->row();
+        }
+    }
+
+    function updatePwd()
+    {
+        $this->db->update('customer',[
+            'customerPassword' => md5($this->input->post('newpwd'))
+        ]);
+    }
+
 
 	
 }

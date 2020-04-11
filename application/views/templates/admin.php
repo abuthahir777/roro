@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"> -->
     
   </head>
   <body>
@@ -146,9 +146,6 @@
                 <a class="navbar-brand brand-logo-mini" href="index.html"><img src="<?php echo base_url('assets/admin');?>/images/logo-mini.svg" alt="logo"/></a>
             </div>
             <ul class="navbar-nav navbar-nav-right">
-                <li class="nav-item dropdown  d-lg-flex d-none">
-                  <button type="button" class="btn btn-inverse-primary btn-sm">Product </button>
-                </li>
                 <li class="nav-item dropdown d-lg-flex d-none">
                   <a class="dropdown-toggle show-dropdown-arrow btn btn-inverse-primary btn-sm" id="nreportDropdown" href="#" data-toggle="dropdown">
                   Reports
@@ -166,7 +163,7 @@
                   </div>
                 </li>
                 <li class="nav-item dropdown d-lg-flex d-none">
-                  <button type="button" class="btn btn-inverse-primary btn-sm">Settings</button>
+                  <!-- <button type="button" class="btn btn-inverse-primary btn-sm">Settings</button> -->
                 </li>
                 <li class="nav-item nav-profile dropdown">
                   <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" id="profileDropdown">
@@ -193,10 +190,10 @@
         </div>
       </nav>
       <nav class="bottom-navbar">
-        <div class="" align="center">
+        <div class="container" align="center">
             <ul class="nav page-navigation">
               <li class="nav-item">
-                <a class="nav-link" href="">
+                <a class="nav-link" href="<?php echo base_url('admin');?>/dashboard">
                   <i class="mdi mdi-file-document-box menu-icon"></i>
                   <span class="menu-title">Dashboard</span>
                 </a>
@@ -213,13 +210,6 @@
                           <li class="nav-item"><a class="nav-link" href="">Page</a></li>
                       </ul>
                   </div>
-              </li>
-              <li class="nav-item">
-                  <a href="" class="nav-link">
-                    <i class="mdi mdi-chart-areaspline menu-icon"></i>
-                    <span class="menu-title">Form Elements</span>
-                    <i class="menu-arrow"></i>
-                  </a>
               </li>
               <li class="nav-item">
                   <a href="" class="nav-link">
@@ -286,7 +276,7 @@
                             <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/port">Ports</a></li><?php }?>
                           <?php if($this->session->userdata("Airport") == "Airport"){?>
                             <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/airport">Airports</a></li><?php }?>
-                          <?php if($this->session->userdata("Curriency") == "Curriency"){?>
+                          <?php if($this->session->userdata("Currency") == "Currency"){?>
                             <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/currency">Currencies</a></li><?php }?>
                           <?php if($this->session->userdata("Delivery Type") == "Delivery Type"){?>
                             <li class="nav-item"><a class="nav-link" href="<?php echo base_url('admin');?>/deliverytype">Delivery Types</a></li><?php }?>
@@ -347,6 +337,6 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
     <!-- Google places API-->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHacHK6abLIA3HgSmi6HNBoFW3dwvfKFk&libraries=places"></script>
+<!--     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBHacHK6abLIA3HgSmi6HNBoFW3dwvfKFk&libraries=places"></script> -->
   </body>
 </html>

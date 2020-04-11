@@ -10,7 +10,7 @@ class ShipmentFrequency extends CI_Controller
 
 		$this->load->model(array('ShipmentFrequency_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."frequency-of-shipment";
+		$this->page = $this->config->item("base_url_admin")."/frequency-of-shipment";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
 		

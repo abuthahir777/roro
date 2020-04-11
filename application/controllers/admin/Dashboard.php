@@ -1,5 +1,5 @@
 <?php
-class Port extends CI_Controller 
+class Dashboard extends CI_Controller 
 {
 	public function __construct()
 	{
@@ -8,11 +8,9 @@ class Port extends CI_Controller
 
 		$this->load->database();
 
-		$this->load->model(array('State_Model','Country_Model','Port_Model'));
+		$this->load->model(array('State_Model','Country_Model','Airport_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."/port";
-
-		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),5);
+		$this->page = $this->config->item("base_url_admin")."/airport";
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -24,37 +22,33 @@ class Port extends CI_Controller
 		{
 			header("Location:".$this->config->item("base_url_admin"));
 		}
+
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),4);
 	
 	}
 
 
 	function index()
 	{
-		if(isset($this->permission['create']))
-		{
-			$data['create'] = "Create";			
-		}else{$data['NULL'] = "";}
-		
-		$data['country'] = $this->Country_Model->getall();
-		$this->layouts->title('State Table');
-		$this->layouts->view('pages/admin/port/table',$data,'admin');
+		$this->layouts->title('Dashboard');
+		$this->layouts->view('pages/admin/dashboard/dashboard','','admin');
 	}
 
 	function fetch()
 	{
+		$fetch_data = $this->Airport_Model->fetch_data();  
+		
 
-		$fetch_data = $this->Port_Model->fetch_data();  
 		$data = array();  
 		$i=1;
 		foreach($fetch_data as $row)  
 		{  
 			$sub_array = array(); 
 			$sub_array[] = $i;   
-			$sub_array[] = $row->portCode;
-			$sub_array[] = $row->portName;
+			$sub_array[] = $row->airportCode;
+			$sub_array[] = $row->airportName;
 			$sub_array[] = $row->stateName;
 			$sub_array[] = $row->countryName;
-
 
 			if($row->active_status == 1)
 			{
@@ -67,7 +61,7 @@ class Port extends CI_Controller
 
 			if(isset($this->permission))
 			{
-				if(isset($permission['view']))
+				if(isset($this->permission['view']))
 				{
 					$view = '';
 				}
@@ -80,11 +74,11 @@ class Port extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/port').'/status/activate/'.$row->portId.'" type="submit" name="delete" id="'.$row->portId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
+						$status = '<a href ="'.base_url('admin/airport').'/status/activate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/port').'/status/deactivate/'.$row->portId.'" type="submit" name="delete" id="'.$row->portId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
+						$status = '<a href ="'.base_url('admin/airport').'/status/deactivate/'.$row->airportId.'" type="submit" name="delete" id="'.$row->airportId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else
@@ -94,7 +88,7 @@ class Port extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -103,7 +97,7 @@ class Port extends CI_Controller
 
 				if(isset($this->permission['delete']))
 				{
-					$delete = '<a href ="'.base_url('admin/port').'/delete/'.$row->portId.'" type="submit" name="edit" id="'.$row->portId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+					$delete = '<a href ="'.base_url('admin/airport').'/delete/'.$row->airportId.'" type="submit" name="edit" id="'.$row->airportId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
 				else
 				{
@@ -116,15 +110,16 @@ class Port extends CI_Controller
 			{
 				$sub_array[] = '<div align="center">NO ACTIONS ALLOWED</div>';
 			}
-  
+
+ 
 			$data[] = $sub_array;  
 			$i++;
 
 		}  
 		$output = array(  
 			"draw"                  =>     intval($_POST["draw"]),  
-			"recordsTotal"          =>     $this->Port_Model->get_all_data(),  
-			"recordsFiltered"     	=>     $this->Port_Model->get_filtered_data(),  
+			"recordsTotal"          =>     $this->Airport_Model->get_all_data(),  
+			"recordsFiltered"     	=>     $this->Airport_Model->get_filtered_data(),  
 			"data"                  =>     $data  
 			);  
 		echo json_encode($output);
@@ -134,47 +129,47 @@ class Port extends CI_Controller
 	{
 		if($this->input->post('action')=="save")
 		{
-			$this->Port_Model->save();
+			$this->Airport_Model->save();
 			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
-			$this->Port_Model->update();
+			$this->Airport_Model->update();
 			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
 	}
 
-
 	function status()
 	{
-		$this->Port_Model->status();
+		$this->Airport_Model->status();
 		header("Location:".$this->page);
 
-	}
-
-	function getbyID()
-	{
-		$data = $this->Port_Model->get($this->input->post("id"));
-
-		$output['country'] = $data->countryId;
-		$output['state'] = $data->stateId;
-		$output['code'] = $data->portCode;
-		$output['port'] = $data->portName;
-		echo json_encode($output);
 	}
 
 	function delete()
 	{
-		$this->Port_Model->delete();
+		$this->Airport_Model->delete();
 		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 
+	function getsingle()
+	{
+		$data = $this->Airport_Model->get($this->input->post("id"));
+
+		$output['country'] = $data->countryId;
+		$output['state'] = $data->stateId;
+		$output['code'] = $data->airportCode;
+		$output['airport'] = $data->airportName;
+		echo json_encode($output);
+	}
+
+
 	function checkCode()
 	{
-		$data = $this->Port_Model->checkCode();
+		$data = $this->Airport_Model->checkCode();
 
 		if($data)
 		{
@@ -186,6 +181,5 @@ class Port extends CI_Controller
 		}
 
 	}
-
 
 } ?>

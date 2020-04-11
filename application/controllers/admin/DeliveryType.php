@@ -10,7 +10,7 @@ class DeliveryType extends CI_Controller
 
 		$this->load->model(array('Delivery_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."deliverytype";
+		$this->page = $this->config->item("base_url_admin")."/deliverytype";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
 

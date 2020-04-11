@@ -10,9 +10,9 @@ class BusinessType extends CI_Controller
 
 		$this->load->model(array('BusinessType_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."business-type";
+		$this->page = $this->config->item("base_url_admin")."/business-type";
 
-		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),7);
+		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),12);
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -131,10 +131,12 @@ class BusinessType extends CI_Controller
 		if($this->input->post('action')=="save")
 		{
 			$this->BusinessType_Model->save();
+			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
 			$this->BusinessType_Model->update();
+			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
@@ -151,6 +153,7 @@ class BusinessType extends CI_Controller
 	function delete()
 	{
 		$this->BusinessType_Model->delete();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 

@@ -10,7 +10,7 @@ class Customer extends CI_Controller
 
 		$this->load->model(array('Customer_Model','User_Model','Country_Model','State_Model','City_Model','BusinessType_Model','ShipmentFrequency_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."customer";
+		$this->page = $this->config->item("base_url_admin")."/customer";
 
 		//$this->permission = $this->permission->setRights($this->session->userdata('roleId'),11);
 		$this->permission = array('create' => 1, 'view'=>1, 'update'=>1 , 'delete'=>1 , 'status'=>1);
@@ -58,7 +58,7 @@ class Customer extends CI_Controller
 			$sub_array[] = $row->customerMobile;
 			$sub_array[] = $row->customerCompany;
 			$sub_array[] = $row->customerAddress;
-			$sub_array[] = $row->customerCountry;
+			$sub_array[] = $row->countryName;
 
 			if($row->active_status == 1)
 			{
@@ -84,11 +84,11 @@ class Customer extends CI_Controller
 				{
 					if($row->active_status == 1)
 					{
-						$status = '<a href ="'.base_url('admin/customer').'/status/activate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
+						$status = '<a href ="'.base_url('admin/customer').'/status/activate/'.$row->customerId.'" type="submit" name="delete" id="'.$row->customerId.'" class="update" ><i class="fa fa-toggle-off"></i></a>';
 					}
 					else
 					{
-						$status = '<a href ="'.base_url('admin/customer').'/status/deactivate/'.$row->userId.'" type="submit" name="delete" id="'.$row->userId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
+						$status = '<a href ="'.base_url('admin/customer').'/status/deactivate/'.$row->customerId.'" type="submit" name="delete" id="'.$row->customerId.'" class="update" ><i class="fa fa-toggle-on"></i></a>';
 					}
 				}
 				else
@@ -98,7 +98,7 @@ class Customer extends CI_Controller
 
 				if(isset($this->permission['update']))
 				{
-					$update = '<a href ="'.base_url('admin/customer').'/edit/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-edit"></i></a>';
+					$update = '<a href ="'.base_url('admin/customer').'/edit/'.$row->customerId.'" type="submit" name="edit" id="'.$row->customerId.'" class="edit" ><i class="fa fa-edit"></i></a>';
 				}
 				else
 				{
@@ -107,7 +107,7 @@ class Customer extends CI_Controller
 
 				if(isset($this->permission['delete']))
 				{
-					$delete = '<a href ="'.base_url('admin/customer').'/delete/'.$row->userId.'" type="submit" name="edit" id="'.$row->userId.'" class="edit" ><i class="fa fa-trash"></i></a>';
+					$delete = '<a href ="'.base_url('admin/customer').'/delete/'.$row->customerId.'" type="submit" name="edit" id="'.$row->customerId.'" class="edit" ><i class="fa fa-trash"></i></a>';
 				}
 				else
 				{
@@ -146,15 +146,20 @@ class Customer extends CI_Controller
 
 	function save()
 	{
-		$config['allowed_types'] = 'doc|docx|pdf|jpeg|png';
+		$config['allowed_types'] = 'doc|docx|pdf|jpg|png';
 		$config['upload_path'] = './forms/IDProof';
 		$config['file_name'] = $this->input->post('fname')."_".$this->input->post('lname')."_".$this->input->post('cname');
 
 		$this->load->library('upload',$config);
 
-		if($this->upload->do_upload('fileupload'))
+		if($this->upload->do_upload('idproof'))
 		{
 			$this->Customer_Model->save();
+			$this->session->set_flashdata('save','Saved');
+		}
+		else
+		{
+			$this->session->set_flashdata('uploaderror',$this->upload->display_errors());
 		}
 		
 		header("Location:".$this->page);
@@ -163,7 +168,7 @@ class Customer extends CI_Controller
 
 	function status()
 	{
-		$this->User_Model->statusUser();
+		$this->Customer_Model->status();
 		header("Location:".$this->page);
 
 	}
@@ -171,22 +176,26 @@ class Customer extends CI_Controller
 	function edit()
 	{
 		$data['edit'] = $this->uri->segment(3);
-		$data['roles'] = $this->User_Model->getRoles();
-		$data['user'] = $this->User_Model->getUser();
+		$data['customer'] = $this->Customer_Model->get($this->uri->segment(4));
+		$data['country'] = $this->Country_Model->getall();
+		$data['businessType'] = $this->BusinessType_Model->getall();
+		$data['shipmentFreq'] = $this->ShipmentFrequency_Model->getall();
 
 		$this->layouts->title('Edit');
-		$this->layouts->view('pages/admin/users/form',$data,'admin');
+		$this->layouts->view('pages/admin/customer/form',$data,'admin');
 	}
 
 	function update()
 	{
-		$this->User_Model->updateUser();
+		$this->Customer_Model->update();
+		$this->session->set_flashdata('update','Updated');
 		header("Location:".$this->page);
 	}
 
 	function delete()
 	{
-		$this->User_Model->deleteUser();
+		$this->Customer_Model->delete();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 
@@ -225,6 +234,30 @@ class Customer extends CI_Controller
 		{
 			echo '<option value="">No City</option>';
 		}
+	}
+
+
+	function checkPwd()
+	{
+		$data = $this->Customer_Model->checkCustomer($this->input->post('custId'));
+
+		if(isset($data))
+		{
+			$customer['item'] = "enable";
+		}
+		else
+		{
+			$customer['item'] = "disable";
+		}
+
+		echo json_encode($customer);
+		
+	}
+
+	function updatePwd()
+	{
+		$this->Customer_Model->updatePwd();
+		header("Location:".$this->page);
 	}
 
 

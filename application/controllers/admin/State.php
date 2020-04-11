@@ -10,7 +10,7 @@ class State extends CI_Controller
 
 		$this->load->model(array('State_Model','Country_Model','Excel_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."state";
+		$this->page = $this->config->item("base_url_admin")."/state";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),2);
 

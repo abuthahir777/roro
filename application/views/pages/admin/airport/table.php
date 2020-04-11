@@ -2,13 +2,39 @@
     <div class="card-header">
       <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <h2>Airports</h2>
         </div>
 
-        <div class="col-md-6" align="center"></div>
+          <div class="col-md-6" align="center">
+          
+            <?php
 
-        <div class="col-md-2" align="right">
+            if($this->session->flashdata('save'))
+            { ?>
+              <div class="alert alert-success hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('save'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('update'))
+            { ?>
+              <div class="alert alert-info hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('update'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('delete'))
+            { ?>
+              <div class="alert alert-danger hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('delete'); ?></h3>
+              </div>
+            <?php }
+
+            ?>     
+        </div>
+
+        <div class="col-md-3" align="right">
           <?php if(isset($create)){ ?>
               <h2><input type="submit" name="add" id="add" value="Add" class="btn btn-primary"></h2>
           <?php } ?>
@@ -135,7 +161,7 @@
 
                 $.ajax({
 
-                  url: "<?php echo base_url('admin/airport/fetchState');?>",
+                  url: "<?php echo base_url('admin/state/fetchState');?>",
                   method: "POST",
                   data: {countryId:data.country},
                   success:function(data)

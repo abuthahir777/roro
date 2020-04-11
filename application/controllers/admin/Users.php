@@ -10,7 +10,7 @@ class Users extends CI_Controller
 
 		$this->load->model(array('User_Model','Country_Model','City_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."users";
+		$this->page = $this->config->item("base_url_admin")."/users";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),10);
 
@@ -142,6 +142,7 @@ class Users extends CI_Controller
 	function save()
 	{
 		$this->User_Model->saveUser();
+		$this->session->set_flashdata('save','Saved');
 		header("Location:".$this->page);
 	}
 
@@ -166,12 +167,14 @@ class Users extends CI_Controller
 	function update()
 	{
 		$this->User_Model->updateUser();
+		$this->session->set_flashdata('update','Updated');
 		header("Location:".$this->page);
 	}
 
 	function delete()
 	{
 		$this->User_Model->deleteUser();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 

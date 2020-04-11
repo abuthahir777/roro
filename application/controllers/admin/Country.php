@@ -10,7 +10,7 @@ class Country extends CI_Controller
 
 		$this->load->model(array('Country_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."country";
+		$this->page = $this->config->item("base_url_admin")."/country";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),1);
 
@@ -132,10 +132,12 @@ class Country extends CI_Controller
 		if($this->input->post('action')=="save")
 		{
 			$this->Country_Model->save();
+			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
 			$this->Country_Model->update();
+			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
@@ -161,6 +163,7 @@ class Country extends CI_Controller
 	function delete()
 	{
 		$this->Country_Model->delete();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 

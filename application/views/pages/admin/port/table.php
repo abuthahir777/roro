@@ -2,13 +2,39 @@
     <div class="card-header">
       <div class="row">
 
-        <div class="col-md-4">
+        <div class="col-md-3">
           <h3>Ports</h3>
         </div>
 
-        <div class="col-md-6" align="center"></div>
+        <div class="col-md-6" align="center">
+          
+            <?php
 
-        <div class="col-md-2" align="right">
+            if($this->session->flashdata('save'))
+            { ?>
+              <div class="alert alert-success hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('save'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('update'))
+            { ?>
+              <div class="alert alert-info hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('update'); ?></h3>
+              </div>
+            <?php }
+
+            if($this->session->flashdata('delete'))
+            { ?>
+              <div class="alert alert-danger hideit" role="alert">
+                <h3><?php echo $this->session->flashdata('delete'); ?></h3>
+              </div>
+            <?php }
+
+            ?>     
+        </div>
+
+        <div class="col-md-3" align="right">
           <?php if(isset($create)){?>
               <input type="submit" name="add" id="add" value="Add" class="btn btn-primary">
           <?php } ?>
@@ -236,10 +262,9 @@
           $("#code-info").html("");
       }
 
-      if(!$("#code-avl").html("")){
+      if($("#code-avl").html() !=""){
+        $('#code-avl').html("Already Exists");
         valid = false;
-      }else{
-          $("#code-info").html("");
       }
 
       return valid;

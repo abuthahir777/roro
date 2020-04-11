@@ -18857,9 +18857,6 @@ code {
   font-size: calc(1rem - 0.05rem);
   font-family: "Source Sans Pro", sans-serif;
   font-weight: 400;
-
-  bottom: 0;
-  height:10px;
 }
 
 .footer .footer-wrap {
@@ -22800,3 +22797,5 @@ dl li {
     right: 0;
   }
 }
+
+/*# sourceMappingURL=maps/style.css.map */

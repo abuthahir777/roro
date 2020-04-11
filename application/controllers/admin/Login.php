@@ -45,7 +45,7 @@ class Login extends CI_Controller
 					$this->session->set_userdata($table->tableName,$table->tableName);
 				}
 
-				header("Location:". $this->page."/role");
+				header("Location:". $this->page."/dashboard");
 			}
 			else
 			{

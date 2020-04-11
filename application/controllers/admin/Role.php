@@ -10,7 +10,7 @@ class Role extends CI_Controller
 
 		$this->load->model(array('User_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."role";
+		$this->page = $this->config->item("base_url_admin")."/role";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),9);
 
@@ -33,8 +33,7 @@ class Role extends CI_Controller
 		if(isset($this->permission['create']))
 		{
 			$data['create'] = "create";
-		}
-		else{ $data = ""; }
+		}else{ $data = ""; }
 
 		$this->layouts->title('Role Table');
 		$this->layouts->view('pages/admin/role/table',$data,'admin');
@@ -176,13 +175,6 @@ class Role extends CI_Controller
 		header("Location:".$this->page);
 	}
 
-
-	function check()
-	{
-		$table = 8;
-		$permissio = $this->User_Model->getPermissions($this->session->userdata('roleId'),1);
-		echo '<pre>'; print_r($permissio); echo '</pre>';
-	}
 
 
 } ?>

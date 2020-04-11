@@ -10,7 +10,7 @@ class Currency extends CI_Controller
 
 		$this->load->model(array('Currency_Model','Country_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."currency";
+		$this->page = $this->config->item("base_url_admin")."/currency";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),6);
 
@@ -133,10 +133,12 @@ class Currency extends CI_Controller
 		if($this->input->post('action')=="save")
 		{
 			$this->Currency_Model->save();
+			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
 			$this->Currency_Model->update();
+			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
@@ -162,6 +164,7 @@ class Currency extends CI_Controller
 	function delete()
 	{
 		$this->Currency_Model->delete();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 

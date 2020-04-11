@@ -10,7 +10,7 @@ class Airport extends CI_Controller
 
 		$this->load->model(array('State_Model','Country_Model','Airport_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."airport";
+		$this->page = $this->config->item("base_url_admin")."/airport";
 
 		if(!$this->session->userdata('fname') && 
 			!$this->session->userdata('lname') &&
@@ -136,10 +136,12 @@ class Airport extends CI_Controller
 		if($this->input->post('action')=="save")
 		{
 			$this->Airport_Model->save();
+			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
 			$this->Airport_Model->update();
+			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
@@ -155,6 +157,7 @@ class Airport extends CI_Controller
 	function delete()
 	{
 		$this->Airport_Model->delete();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 
@@ -167,25 +170,6 @@ class Airport extends CI_Controller
 		$output['code'] = $data->airportCode;
 		$output['airport'] = $data->airportName;
 		echo json_encode($output);
-	}
-
-
-	function fetchState()
-	{
-		$states = $this->State_Model->getSpecific();
-
-		if($states)
-		{
-			echo '<option value="">Select State</option>';
-			foreach($states as $row)
-			{
-				echo '<option value="'.$row->stateId.'">'.$row->stateName.'</option>';
-			}
-		}
-		else
-		{
-			echo '<option value="">No States Entered</option>';
-		}
 	}
 
 

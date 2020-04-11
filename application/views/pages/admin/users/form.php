@@ -46,9 +46,12 @@
                 <span id="email-info" class="error-content err-font-color"></span>
               </div>
               <div class="form-group col-md-6">
+                <?php if(!isset($edit)){ ?>
                 <label for="password">Password</label>
                 <input type="password" class="form-control" id="password" placeholder="Password" name="password">
                 <span id="password-info" class="error-content err-font-color"></span>
+              <?php } ?>
+              <input type="hidden" name="action" id="action" value="<?php if(isset($edit)){ echo $edit;}?>">
               </div>
             </div>
             <div class="form-row">
@@ -117,11 +120,14 @@
           $("#email-info").html("");
       }
 
-      if(!$("#password").val()){
-        $("#password-info").html("*Password required.");
-        valid = false;
-      }else{
-          $("#password-info").html("");
+      if($('#action').val()=="")
+      {
+        if(!$("#password").val()){
+          $("#password-info").html("*Password required.");
+          valid = false;
+        }else{
+            $("#password-info").html("");
+        }
       }
 
       if(!$("#userid").val()){

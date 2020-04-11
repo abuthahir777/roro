@@ -10,7 +10,7 @@ class Module extends CI_Controller
 
 		$this->load->model(array('User_Model'));
 
-		$this->page = $this->config->item("base_url_admin")."module";
+		$this->page = $this->config->item("base_url_admin")."/module";
 
 		$this->permission = $this->permission->setRights($this->session->userdata('roleId'),8);
 
@@ -136,10 +136,12 @@ class Module extends CI_Controller
 		if($this->input->post('action')=="save")
 		{
 			$this->User_Model->saveModule();
+			$this->session->set_flashdata('save','Saved');
 		}
 		else
 		{
 			$this->User_Model->updateModule();
+			$this->session->set_flashdata('update','Updated');
 		}
 		
 		header("Location:".$this->page);
@@ -165,13 +167,13 @@ class Module extends CI_Controller
 	function delete()
 	{
 		$this->User_Model->deleteModule();
+		$this->session->set_flashdata('delete','Deleted');
 		header("Location:".$this->page);
 	}
 
 	function getTObyID()
 	{
-		$oid = $this->input->post('operaId');
-		$tid = $this->input->post('tableId');
+		$oid = $this->input->post('operaId'); $tid = $this->input->post('tableId');
 
 		if($oid !="" && $tid =="")
 		{
